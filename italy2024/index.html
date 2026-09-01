@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italy 2024 — Return to Umbria</title>
+<style>
+  :root{
+    --bg:#f4f0e4; --card:#e9e2ce; --ink:#2f2a1c; --sub:#77704f;
+    --accent:#5f6f33; --accent2:#b5622e; --line:#d8cfae; --gold:#a98f3f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden;background:#1a1a12}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.66)}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:#d8c878;margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em;color:#f4f0e4}
+  .hero p{color:#e9e2c8;font-size:19px;margin-top:14px;max-width:600px}
+  .hero .motto{margin-top:10px;font-style:italic;color:#d8c878;font-size:15px;letter-spacing:.08em}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#e9e2c8;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 34px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent2);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#c2b884;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent2);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--gold);opacity:.45}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"❧";position:absolute;left:-6px;top:0;font-size:19px;color:var(--accent2);background:var(--bg);line-height:1;padding:2px 0}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px;color:#4a3a1c}
+  .day p{color:#453d26;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent2);border:1px solid #c9ad84;border-radius:999px;padding:4px 12px;background:#efe8d3}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:#fff;border-color:var(--accent2);background:var(--accent2)}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid .cell{position:relative;cursor:pointer}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;transition:transform .25s,box-shadow .25s;display:block;background:#ded4b2;border:1px solid var(--line)}
+  .grid .cell:hover img{transform:scale(1.04);box-shadow:0 8px 24px rgba(60,45,10,.35)}
+  .grid .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+  .grid .play span{width:46px;height:46px;border-radius:50%;background:rgba(26,26,18,.72);color:#f4f0e4;display:flex;align-items:center;justify-content:center;font-size:18px;padding-left:4px;border:2px solid rgba(244,240,228,.85)}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(18,16,8,.95);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img,#lb video{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:#cfc290;font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7;z-index:2}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line);background:var(--card)}
+  footer b{color:var(--accent2)}
+  footer a{color:var(--accent2);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  footer .leaf{font-size:18px;color:var(--accent);display:block;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <img src="photos/hero.jpg" alt="The Basilica of Saint Francis above the Umbrian valley">
+  <div class="inner">
+    <div class="kicker">October – November 2024 · Perugia &amp; Assisi · Umbria</div>
+    <h1>Italy 2024 — Return to Umbria</h1>
+    <p>Back to Perugia and Assisi one more time: a five-star fortress, more of the Via di Francesco, cats running a church, and a train strike with a two-hour sprint across Rome.</p>
+    <div class="motto">« La vita è troppo breve per volare cargo » — Life is too short to fly cargo</div>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>8</b><span>Days</span></div>
+  <div class="stat"><b>2</b><span>Hill towns</span></div>
+  <div class="stat"><b>5★</b><span>Fortress hotel</span></div>
+  <div class="stat"><b>1</b><span>Train strike</span></div>
+  <div class="stat"><b>1</b><span>Missed flight</span></div>
+  <div class="stat"><b>320+</b><span>Photos &amp; videos</span></div>
+</div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="timeline">
+
+<section class="day" id="s1">
+  <div class="daylabel">Tappa 1 · Getting There</div>
+  <h2>No More Basic Economy</h2>
+  <p>An A330 to Rome this time — life is too short to fly cargo. Then the train up to Perugia, where I decided to walk from the station to the hotel. Only 2 km, thought I; no problem, thought I. Unbeknownst to me, it's straight up a hill. Hence the name <em>fortress</em> — built specifically to keep annoying visitors at bay.</p>
+  <p>At check-in I tried practicing my Italian, and the poor fellow kindly suggested we switch to English. Italian is harder than Duolingo led me to believe.</p>
+  <div class="tags"><a class="tag" href="https://www.airbus.com/en/products-services/commercial-aircraft/passenger-aircraft/a330-family" target="_blank" rel="noopener">Airbus A330</a><span class="tag">ATL → FCO → Perugia</span><a class="tag" href="https://www.duolingo.com/" target="_blank" rel="noopener">Duolingo vs. reality</a></div>
+  <div class="grid" data-sec="arrivo"></div>
+</section>
+
+<section class="day" id="s2">
+  <div class="daylabel">Tappa 2 · Perugia</div>
+  <h2>The Sina Brufani: A Fortress With Room Service</h2>
+  <p>Upgraded to the Sina Brufani, the five-star hotel in Perugia, right in the Centro Storico where you're in the middle of the action. Breakfast worthy of the setting, marble staircases, and a balcony sunset over the Umbrian valley that made the uphill hike almost feel intentional.</p>
+  <div class="tags"><a class="tag" href="https://www.sinahotels.com/en/h/sina-brufani-perugia/" target="_blank" rel="noopener">Sina Brufani · 5★</a><span class="tag">Balcony sunsets</span></div>
+  <div class="grid" data-sec="brufani"></div>
+</section>
+
+<section class="day" id="s3">
+  <div class="daylabel">Tappa 3 · Perugia</div>
+  <h2>Centro Storico: Accordions, Debates &amp; Perugino</h2>
+  <p>The central market is bustling — a fresh fish stall with a view over the city, and a guy playing the Godfather theme on the accordion. At the Slovakian market square, a French lady explained to me in English why she was selling German bratwurst. Kids ordering beer at 10 am: perfectly normal.</p>
+  <p>The Cattedrale di San Lorenzo is fascinating — stained glass letting light shine off the walls and statues. Then lunch on the cathedral steps along with everyone else, courtesy of the excellent kebab takeaway a few meters away. The only question: is noon too early to order beer?</p>
+  <p>Across the plaza I stopped into the state government building and watched a debate in progress — real political issues discussed intelligently and thoughtfully, like adults. A big contrast to back home, and I used to work in city government. (They were speaking Italian, but they used small words and their PowerPoints had lots of pictures.) Next door, the National Gallery: ten euros and definitely worth it.</p>
+  <div class="tags"><a class="tag" href="https://www.cattedrale.perugia.it/" target="_blank" rel="noopener">Cattedrale di San Lorenzo</a><a class="tag" href="https://gallerianazionaledellumbria.it/" target="_blank" rel="noopener">National Gallery of Umbria</a><span class="tag">Kebab on the steps</span></div>
+  <div class="grid" data-sec="centro"></div>
+</section>
+
+<section class="day" id="s4">
+  <div class="daylabel">Tappa 4 · Perugia</div>
+  <h2>The Minimetro, the Carnival &amp; Halloween</h2>
+  <p>Discovered the Minimetro. Gosh I love this tram — why didn't I know about it before I walked all the way up from the station? It stops in several neighborhoods along the way, a perfect cross-section of life in a medium-sized Italian city, and it ends at the carnival grounds with amusement rides, the Saturday market, the local McDonald's, and the world-famous Baci chocolate factory. You can bring your dog into McDonald's, but not into the chocolate store.</p>
+  <p>Halloween is a big deal in Perugia: a merry-go-round running non-stop, kids in costume going store to store, and perfect weather — a little warm in the afternoon, a slight chill in the evening.</p>
+  <div class="tags"><a class="tag" href="https://www.minimetrospa.it/" target="_blank" rel="noopener">Minimetrò Perugia</a><a class="tag" href="https://www.perugina.com/it/casa-del-cioccolato/Welcome-to-the-Casa-del-Cioccolato" target="_blank" rel="noopener">Perugina · Casa del Cioccolato</a><span class="tag">Dogs welcome at McDonald's</span></div>
+  <div class="grid" data-sec="minimetro"></div>
+</section>
+
+<section class="day" id="s5">
+  <div class="daylabel">Tappa 5 · Assisi</div>
+  <h2>Magical After the Buses Leave</h2>
+  <p>Back to Assisi — the train is only ten minutes, so you can easily spend all day. Buses keep unloading tourists all day long, but wait until nightfall in autumn and Assisi becomes a magical place: the sun going down on the red walls, the Piazza del Comune coming to life with markets, music, and kids running around. Wander the back streets at night and you get a feel for what it was like when Francis lived here in the 12th century. Get up early and you can watch the mist rise off the cobblestones and the fog lift over the valley.</p>
+  <p>The basilicas of Saint Francis and Saint Clare, of course, plus the Temple of Minerva with its underground Roman foundations. Down at San Damiano — Saint Clare's wonderful retreat — there is always someone singing. Santa Maria degli Angeli was still under construction (they've been at it since I was here in 2022), with the Porziuncola covered over and mass held out front on those uncomfortable plastic chairs. Still fun. And the cats who run the church of Santo Stefano up the hill? They're fine, and yes, still in charge. No sign of the friars.</p>
+  <div class="tags"><a class="tag" href="https://www.viadifrancesco.it/en/" target="_blank" rel="noopener">Via di Francesco</a><a class="tag" href="https://www.visit-assisi.it/en/monuments/roman-buildings/temple-of-minerva/" target="_blank" rel="noopener">Temple of Minerva</a><a class="tag" href="https://www.visit-assisi.it/en/monuments/religious-buildings/church-of-santo-stefano/" target="_blank" rel="noopener">Santo Stefano · the cats</a><a class="tag" href="https://www.montesubasio.it/en/" target="_blank" rel="noopener">Monte Subasio</a></div>
+  <div class="grid" data-sec="assisi"></div>
+</section>
+
+<section class="day" id="s6">
+  <div class="daylabel">Tappa 6 · Homeward</div>
+  <h2>Lo Sciopero: The Great Train Strike Adventure</h2>
+  <p>Italian train strike. A fact of life in Italy, and everyone knew it was coming — except me. Up early for the flight: no train. Over to the bus station: no bus. A kind tour guide showed me how to book the next bus by texting a travel company in Düsseldorf. The bus stopped at every village on the way to Rome and dropped me at Tiburtina — the wrong side of Rome from the airport train. So: broken-Italian pleading, a hop on the first bus heading north (nobody checked tickets), riding it as long as Google Maps agreed with the direction, then almost two hours on foot with a backpack while Delta kept calling to ask where I was. Honestly a better tour of Rome than any guide could sell you.</p>
+  <p>Missed the flight anyway. Delta kindly rebooked me on Air France the next day — bonus day in Rome — and a Boeing 777 took me home through Paris, straight through customs at RDU. Sweet. Atlanta customs is a zoo; I'm flying Air France more often.</p>
+  <div class="tags"><a class="tag" href="https://www.italiarail.com/train-station/rome-tiburtina-train-station-guide" target="_blank" rel="noopener">Roma Tiburtina</a><span class="tag">FCO → CDG → RDU · Air France 777</span><span class="tag">2 hours on foot across Rome</span></div>
+  <div class="grid" data-sec="sciopero"></div>
+</section>
+
+</div>
+
+<footer>
+  <span class="leaf">❧</span>
+  Built from the travel journal &amp; 320+ photos · <b>Umbria, October–November 2024</b><br><br>
+  <a href="../index.html">⌂ All trips</a> &nbsp;·&nbsp; <a href="../nz2026/index.html">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../italy2025/index.html">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../colorado2025/index.html">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../italy2022/index.html">Assisi 2022 — In the Footsteps of Saint Francis →</a> &nbsp;·&nbsp; <a href="../antarctica/index.html">Antarctica 1998 — Vernadsky Station →</a>
+</footer>
+
+<div id="lb">
+  <button class="close" onclick="closeLB()">×</button>
+  <button class="prev" onclick="step(-1)">‹</button>
+  <div id="lbmedia"></div>
+  <div class="cap" id="lbcap"></div>
+  <button class="next" onclick="step(1)">›</button>
+</div>
+
+<script>
+const MANIFEST = {
+  arrivo: [{i:"20241030_090403.jpg"},{i:"20241030_142821.jpg"}],
+  brufani: [{i:"20241031_074250.jpg"},{v:"brufani_stairs",c:"Marble staircases of the Sina Brufani"},{i:"20241031_100132.jpg"},{i:"20241031_100627.jpg"},{i:"20241030_161350.jpg"},{i:"20241030_172723.jpg"}],
+  centro: [{i:"20241031_101218.jpg"},{i:"20241031_141650.jpg"},{v:"perugia_piazza",c:"Piazza IV Novembre & the cathedral steps"},{i:"20241030_145524.jpg"},{i:"20241030_150725.jpg"},{v:"perugia_market",c:"The market, in motion"},{i:"20241031_141137.jpg"},{i:"20241031_143919.jpg"},{i:"20241103_181110.jpg"},{i:"20241103_091426.jpg"}],
+  minimetro: [{i:"20241031_110549.jpg"},{v:"carnival_ride",c:"The carnival at Pian di Massiano"},{i:"20241103_125219.jpg"},{i:"20241103_184304.jpg"},{v:"halloween_evening",c:"Halloween evening in the Centro Storico"}],
+  assisi: [{i:"20241101_121352.jpg"},{i:"20241101_121416.jpg"},{i:"20241101_121521.jpg"},{i:"20241101_132420.jpg"},{v:"basilica_interior",c:"Inside the Basilica of Saint Francis"},{i:"20241101_145228.jpg"},{i:"20241101_145820.jpg"},{i:"20241101_145412.jpg"},{v:"assisi_singers",c:"There is always someone singing"},{i:"20241101_155531.jpg"},{i:"20241101_160138.jpg"},{i:"20241101_165051.jpg"}],
+  sciopero: [{i:"20241104_104751.jpg"},{i:"20241103_111932.jpg"},{i:"20241105_155023.jpg"},{i:"20241106_095036.jpg"}]
+};
+const CAPTIONS = {
+  arrivo:"Tappa 1 — The long walk up to the fortress",
+  brufani:"Tappa 2 — Sina Brufani, Perugia",
+  centro:"Tappa 3 — Perugia, Centro Storico",
+  minimetro:"Tappa 4 — Minimetro, carnival & Halloween",
+  assisi:"Tappa 5 — Assisi",
+  sciopero:"Tappa 6 — The train strike adventure"
+};
+// populate grids
+let all = [];
+document.querySelectorAll('.grid').forEach(g=>{
+  const sec = g.dataset.sec;
+  (MANIFEST[sec]||[]).forEach(item=>{
+    const cell = document.createElement('div'); cell.className='cell';
+    const img = document.createElement('img');
+    const isVid = !!item.v;
+    img.src = isVid ? 'videos/'+item.v+'_poster.jpg' : 'photos/'+item.i;
+    img.loading='lazy'; img.alt = item.c || CAPTIONS[sec] || sec;
+    cell.appendChild(img);
+    if(isVid){
+      const p=document.createElement('div'); p.className='play'; p.innerHTML='<span>▶</span>';
+      cell.appendChild(p);
+    }
+    const idx = all.length;
+    all.push(isVid ? {vid:'videos/'+item.v+'.mp4', cap:(item.c||CAPTIONS[sec])} : {src:'photos/'+item.i, cap:CAPTIONS[sec]||sec});
+    cell.onclick = ()=>openLB(idx);
+    g.appendChild(cell);
+  });
+});
+// lightbox
+let cur=0;
+const lb=document.getElementById('lb'), lbmedia=document.getElementById('lbmedia'), lbcap=document.getElementById('lbcap');
+function openLB(i){cur=i; render(); lb.classList.add('open')}
+function closeLB(){lb.classList.remove('open'); lbmedia.innerHTML=''}
+function step(d){cur=(cur+d+all.length)%all.length; render()}
+function render(){
+  const it=all[cur];
+  lbmedia.innerHTML='';
+  if(it.vid){
+    const v=document.createElement('video');
+    v.src=it.vid; v.controls=true; v.autoplay=true; v.playsInline=true;
+    lbmedia.appendChild(v);
+  } else {
+    const im=document.createElement('img'); im.src=it.src;
+    lbmedia.appendChild(im);
+  }
+  lbcap.textContent=it.cap+'  ·  '+(cur+1)+' / '+all.length;
+}
+lb.onclick=e=>{if(e.target===lb)closeLB()}
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
+});
+// scroll reveal + nav dots
+const days=[...document.querySelectorAll('section.day')];
+const dots=document.getElementById('dots');
+days.forEach(s=>{
+  const a=document.createElement('a'); a.href='#'+s.id; a.title=s.querySelector('h2').textContent;
+  dots.appendChild(a);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('show');
+    const i=days.indexOf(e.target);
+    dots.querySelectorAll('a').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+}),{threshold:.25});
+days.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

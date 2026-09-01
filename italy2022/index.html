@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assisi Italy 2022 — In the Footsteps of Saint Francis</title>
+<style>
+  :root{
+    --bg:#f7f1e3; --card:#efe6d0; --ink:#33261a; --sub:#7a6a52;
+    --accent:#8e1f1f; --accent2:#b08d2e; --line:#dccfb2; --gold:#b08d2e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden;background:#1c1a16}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.62)}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:#e6c96a;margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em;color:#f7f1e3}
+  .hero p{color:#eee3c8;font-size:19px;margin-top:14px;max-width:600px}
+  .hero .motto{margin-top:10px;font-style:italic;color:#e6c96a;font-size:15px;letter-spacing:.08em}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#eee3c8;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 34px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#c9b98f;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent2)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--gold);opacity:.45}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"✠";position:absolute;left:-4px;top:2px;font-size:17px;color:var(--accent);background:var(--bg);line-height:1;padding:2px 0}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px;color:#4a2c17}
+  .day p{color:#4d3d29;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent);border:1px solid #cbb27e;border-radius:999px;padding:4px 12px;background:#f2ead6}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:#fff;border-color:var(--accent);background:var(--accent)}
+
+  /* Featured video */
+  .video{position:relative;width:100%;max-width:760px;aspect-ratio:16/9;margin:18px 0;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#1c1a16;box-shadow:0 8px 24px rgba(60,40,10,.18)}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  /* Shorts grid — click to play */
+  .shorts{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:18px}
+  .short{position:relative;aspect-ratio:9/16;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid var(--line);background:#1c1a16}
+  .short img{width:100%;height:100%;object-fit:cover;transition:transform .25s;display:block}
+  .short:hover img{transform:scale(1.05)}
+  .short .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(20,14,8,.25);transition:.2s}
+  .short:hover .play{background:rgba(20,14,8,.05)}
+  .short .play span{width:48px;height:48px;border-radius:50%;background:rgba(142,31,31,.92);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;padding-left:4px}
+  .short iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .25s,box-shadow .25s;display:block;background:#e3d7ba;border:1px solid var(--line)}
+  .grid img:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(60,40,10,.35)}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(20,14,8,.95);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:#d8c79a;font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line);background:var(--card)}
+  footer b{color:var(--accent)}
+  footer a{color:var(--accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  footer .cross{font-size:18px;color:var(--gold);display:block;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <img src="photos/20221123_040301572_ios-1.jpg" alt="Assisi, Italy">
+  <div class="inner">
+    <div class="kicker">November 2022 · Assisi · Umbria</div>
+    <h1>Assisi 2022 — In the Footsteps of Saint Francis</h1>
+    <p>Eight days in the city of Saint Francis — the Porziuncola, the great basilicas, the medieval streets, and the Umbrian hills, captured in photos and video.</p>
+    <div class="motto">« Pax et Bonum » — Peace and All Good</div>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>8</b><span>Days</span></div>
+  <div class="stat"><b>2</b><span>Basilicas</span></div>
+  <div class="stat"><b>1</b><span>Porziuncola</span></div>
+  <div class="stat"><b>37</b><span>Videos</span></div>
+  <div class="stat"><b>140+</b><span>Photos</span></div>
+</div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="timeline">
+
+<section class="day" id="s1">
+  <div class="daylabel">Santa Maria degli Angeli</div>
+  <h2>The Porziuncola</h2>
+  <p>Down in the valley below Assisi stands the great basilica of Santa Maria degli Angeli, built over the tiny Porziuncola chapel that Saint Francis rebuilt with his own hands — the birthplace of the Franciscan movement, and the place where he died.</p>
+  <div class="tags"><a class="tag" href="https://www.porziuncola.org/" target="_blank" rel="noopener">Santa Maria degli Angeli</a><a class="tag" href="https://en.wikipedia.org/wiki/Porziuncola" target="_blank" rel="noopener">The Porziuncola</a></div>
+  <div class="video"><iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/C9bdq9lHcoM" title="Santa Maria degli Angeli" allowfullscreen></iframe></div>
+  <div class="video"><iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/gQNjqKjj6TQ" title="Santa Maria degli Angeli" allowfullscreen></iframe></div>
+  <div class="grid" data-sec="porziuncola"></div>
+  <div class="shorts" data-shorts="W5_yWGwXhDo"></div>
+</section>
+
+<section class="day" id="s2">
+  <div class="daylabel">Basilica di San Francesco</div>
+  <h2>The Basilica of Saint Francis</h2>
+  <p>Up the hill to the great two-level basilica where Saint Francis is buried — Giotto's frescoes above, the saint's tomb below, and views over the Umbrian plain from the piazza.</p>
+  <div class="tags"><a class="tag" href="https://www.sanfrancescoassisi.org/" target="_blank" rel="noopener">Basilica of Saint Francis</a><a class="tag" href="https://www.youtube.com/watch?v=lW8KTw-jQL4" target="_blank" rel="noopener">Video · Basilica</a></div>
+  <div class="grid" data-sec="basilica"></div>
+  <div class="shorts" data-shorts="tnXEQeq9WJk,5rU8B61MNP8"></div>
+</section>
+
+<section class="day" id="s3">
+  <div class="daylabel">Centro Storico</div>
+  <h2>The Streets of Assisi</h2>
+  <p>Medieval lanes, stone archways, and quiet piazzas — Assisi is best explored on foot, especially in the evening when the day-trippers have gone home.</p>
+  <div class="tags"><a class="tag" href="https://www.visit-assisi.it/en/" target="_blank" rel="noopener">Visit Assisi</a><a class="tag" href="https://en.wikipedia.org/wiki/Rocca_Maggiore" target="_blank" rel="noopener">Rocca Maggiore</a></div>
+  <div class="grid" data-sec="streets"></div>
+</section>
+
+<section class="day" id="s4">
+  <div class="daylabel">Mattina ad Assisi</div>
+  <h2>Morning Walks</h2>
+  <p>Early mornings in the hill town — fog lifting off the valley, empty streets, and the bells calling the town awake.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/Assisi" target="_blank" rel="noopener">Assisi</a></div>
+  <div class="grid" data-sec="morning"></div>
+</section>
+
+<section class="day" id="s5">
+  <div class="daylabel">San Damiano &amp; Dintorni</div>
+  <h2>San Damiano &amp; the Countryside</h2>
+  <p>Below the city walls, through the olive groves, to San Damiano — where the crucifix spoke to Francis and where Saint Clare lived out her life.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/San_Damiano,_Assisi" target="_blank" rel="noopener">San Damiano</a><a class="tag" href="https://www.assisisantachiara.it/" target="_blank" rel="noopener">Basilica of Saint Clare</a></div>
+  <div class="grid" data-sec="damiano"></div>
+  <div class="shorts" data-shorts="5uo7rxlynOE"></div>
+</section>
+
+<section class="day" id="s6">
+  <div class="daylabel">Ultimi Giorni</div>
+  <h2>Last Days &amp; Farewell</h2>
+  <p>Final walks through town, last visits to the basilicas, evening meals, and the early-morning departure home.</p>
+  <div class="tags"><span class="tag">Arrivederci Assisi</span></div>
+  <div class="grid" data-sec="finale"></div>
+</section>
+
+<section class="day" id="s7">
+  <div class="daylabel">I Video</div>
+  <h2>Video Highlights</h2>
+  <p>Short clips from around Assisi — churches, streets, music, and moments. Tap any one to play.</p>
+  <div class="video"><iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/aPDV9anQNoc" title="Assisi 2022" allowfullscreen></iframe></div>
+  <div class="shorts" data-shorts="vB1NL-lJPYI,DyFfeHZu5Eg,siQsxLeDJFY,US8JK4LNqRg,S-Wpz_52GEM,xnldWi4MtTQ,mjgfAGH0XPI,EsYi37ScaZ0,wJdoDAKnzYA,NjhJ4ZyyiKA,e6IzmYxSr4M,g2y0TPzeuS0,21Tc59crMLM,IcuZEEM0MaA,s9LUDZW9vSw,knIu4NHAh8M,eGrSXzapcsI,TMZWnDNPriQ,PCyhURhuIyo,9b1NBqzVwuQ,fZwD5ZJ69ls,_UdXuq6Dx1Y,uqB76KfFjUQ,wU-t93XIHgE,-uloFdhVY-8,GyGn7TiEQNA,w_xiZP0NhWo,_jIEAM--Bpw"></div>
+  <div class="video"><iframe loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/H-i8TJHkqAY" title="Assisi 2022" allowfullscreen></iframe></div>
+</section>
+
+</div>
+
+<footer>
+  <span class="cross">✠</span>
+  Built from 140+ photos &amp; 37 videos · <b>Assisi, Italy · November 2022</b><br><br>
+  <a href="../index.html">⌂ All trips</a> &nbsp;·&nbsp; <a href="../nz2026/index.html">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../italy2025/index.html">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../colorado2025/index.html">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../italy2024/index.html">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../antarctica/index.html">Antarctica 1998 — Vernadsky Station →</a>
+</footer>
+
+<div id="lb">
+  <button class="close" onclick="closeLB()">×</button>
+  <button class="prev" onclick="step(-1)">‹</button>
+  <img id="lbimg" src="" alt="">
+  <div class="cap" id="lbcap"></div>
+  <button class="next" onclick="step(1)">›</button>
+</div>
+
+<script>
+const BASE = 'photos/';
+const MANIFEST = {
+  porziuncola: ["20221116_153326726_ios.jpg","20221117_090529374_ios.jpg","20221117_090533306_ios.jpg","20221117_090535172_ios.jpg","20221117_093526515_ios.jpg","20221117_094703712_ios.jpg","20221117_094718742_ios.jpg","20221117_103345166_ios.jpg","20221117_103410006_ios.jpg","20221117_103514695_ios.jpg","20221117_110859011_ios.jpg","20221117_114736218_ios.jpg","20221117_114824889_ios.jpg","20221117_114838086_ios.jpg","20221117_114853407_ios.jpg","20221117_115227174_ios.jpg","20221117_115245984_ios.jpg","20221117_115249231_ios.jpg","20221117_120841762_ios.jpg","20221117_120852630_ios.jpg","20221117_130906390_ios.jpg","20221117_130914725_ios.jpg"],
+  basilica: ["20221117_134822804_ios.jpg","20221117_145415070_ios.jpg","20221117_145755327_ios.jpg","20221117_145800361_ios.jpg","20221117_145805828_ios.jpg","20221117_151233818_ios.jpg","20221117_151245819_ios.jpg","20221117_151248687_ios.jpg","20221117_151250887_ios.jpg","20221117_151253487_ios.jpg","20221117_151258655_ios.jpg","20221117_151312661_ios.jpg","20221117_151317642_ios.jpg","20221117_151324212_ios.jpg","20221117_151355086_ios.jpg","20221117_152906502_ios.jpg","20221117_152913443_ios.jpg","20221117_152916544_ios.jpg","20221117_152920377_ios.jpg","20221117_153637993_ios.jpg","20221117_154240568_ios.jpg","20221117_154251477_ios.jpg","20221117_154427514_ios.jpg","20221117_154437207_ios.jpg","20221117_154612502_ios.jpg","20221117_164955422_ios.jpg","20221117_194841187_ios.jpg","20221117_194912020_ios.jpg"],
+  streets: ["20221118_151625496_ios.jpg","20221118_151830584_ios.jpg","20221118_154509210_ios.jpg","20221118_154610967_ios.jpg","20221118_154613341_ios.jpg","20221118_154619415_ios.jpg","20221118_154626386_ios.jpg","20221118_154647509_ios.jpg","20221118_155906161_ios.jpg","20221118_164053693_ios.jpg","20221118_164111394_ios.jpg","20221118_164211690_ios.jpg","20221118_164231995_ios.jpg","20221118_164248353_ios.jpg","20221118_164329163_ios.jpg","20221118_164408912_ios.jpg","20221118_164520398_ios.jpg","20221118_164522588_ios.jpg","20221118_164549318_ios.jpg","20221118_164552459_ios.jpg","20221118_164558654_ios.jpg","20221118_164617442_ios.jpg","20221118_164741456_ios.jpg","20221118_164843118_ios.jpg","20221118_164954582_ios.jpg","20221118_165039579_ios.jpg","20221118_170708855_ios.jpg","20221118_170940443_ios.jpg","20221118_171133974_ios.jpg","20221118_171137348_ios.jpg","20221118_171242292_ios.jpg","20221118_192333069_ios.jpg","20221118_192444982_ios.jpg","20221118_195341831_ios.jpg","20221118_200455306_ios.jpg","20221118_205026182_ios.jpg"],
+  morning: ["20221119_083407584_ios.jpg","20221119_083500270_ios.jpg","20221119_083521905_ios.jpg","20221119_083525355_ios.jpg","20221119_083527906_ios.jpg","20221119_100244919_ios.jpg","20221119_100252587_ios.jpg","20221119_100704698_ios.jpg","20221119_100719067_ios.jpg","20221119_100737977_ios.jpg","20221119_100747945_ios.jpg","20221119_101539248_ios.jpg","20221119_102729065_ios.jpg","20221119_102732250_ios.jpg","20221119_102735955_ios.jpg","20221119_102740869_ios.jpg","20221119_102801553_ios.jpg","20221119_102809246_ios.jpg","20221119_104052341_ios.jpg","20221119_104055020_ios.jpg"],
+  damiano: ["20221120_151008294_ios.jpg","20221120_151028063_ios.jpg","20221120_151238454_ios.jpg","20221120_151251000_ios.jpg","20221120_151505521_ios.jpg","20221120_151743363_ios.jpg","20221120_151921628_ios.jpg","20221120_151924848_ios.jpg","20221120_151931127_ios.jpg","20221120_152111054_ios.jpg","20221120_152217390_ios.jpg","20221120_152322484_ios.jpg","20221120_152327485_ios.jpg","20221120_152523607_ios.jpg","20221120_152624654_ios.jpg"],
+  finale: ["20221121_094758974_ios.jpg","20221121_094801808_ios.jpg","20221121_100650391_ios.jpg","20221121_101540957_ios.jpg","20221121_102925428_ios.jpg","20221121_104934403_ios.jpg","20221121_130739133_ios.jpg","20221121_132409491_ios.jpg","20221121_132420559_ios.jpg","20221121_132728162_ios.jpg","20221121_133358080_ios.jpg","20221121_133408655_ios.jpg","20221121_133422631_ios.jpg","20221121_134140106_ios.jpg","20221121_135436501_ios.jpg","20221121_142803262_ios.jpg","20221121_145006381_ios.jpg","20221121_154733057_ios.jpg","20221121_191326263_ios.jpg","20221121_191332648_ios.jpg","20221121_194648183_ios.jpg","20221121_194650287_ios.jpg","20221122_075439065_ios-1.jpg","20221122_075442883_ios-1.jpg","20221123_040301572_ios-1.jpg"]
+};
+const CAPTIONS = {
+  porziuncola:"Santa Maria degli Angeli — The Porziuncola",
+  basilica:"Basilica of Saint Francis",
+  streets:"The Streets of Assisi",
+  morning:"Morning Walks",
+  damiano:"San Damiano & the Countryside",
+  finale:"Last Days & Farewell"
+};
+// populate photo grids
+let all = [];
+document.querySelectorAll('.grid').forEach(g=>{
+  const sec = g.dataset.sec;
+  (MANIFEST[sec]||[]).forEach(name=>{
+    const img = document.createElement('img');
+    img.src = BASE+name+'?w=480'; img.loading='lazy'; img.alt = CAPTIONS[sec]||sec;
+    const idx = all.length; all.push({src:BASE+name+'?w=1600', cap:CAPTIONS[sec]||sec});
+    img.onclick = ()=>openLB(idx);
+    g.appendChild(img);
+  });
+});
+// populate shorts (click-to-play)
+document.querySelectorAll('.shorts').forEach(w=>{
+  (w.dataset.shorts||'').split(',').filter(Boolean).forEach(id=>{
+    const d = document.createElement('div'); d.className='short';
+    d.innerHTML = '<img loading="lazy" src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg" alt="Video"><div class="play"><span>▶</span></div>';
+    d.onclick = ()=>{
+      d.innerHTML = '<iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube.com/embed/'+id+'?autoplay=1" title="Video" allow="autoplay" allowfullscreen></iframe>';
+    };
+    w.appendChild(d);
+  });
+});
+// lightbox
+let cur=0;
+const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
+function openLB(i){cur=i; render(); lb.classList.add('open')}
+function closeLB(){lb.classList.remove('open')}
+function step(d){cur=(cur+d+all.length)%all.length; render()}
+function render(){lbimg.src=all[cur].src; lbcap.textContent=all[cur].cap+'  ·  '+(cur+1)+' / '+all.length}
+lb.onclick=e=>{if(e.target===lb)closeLB()}
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
+});
+// scroll reveal + nav dots
+const days=[...document.querySelectorAll('section.day')];
+const dots=document.getElementById('dots');
+days.forEach(s=>{
+  const a=document.createElement('a'); a.href='#'+s.id; a.title=s.querySelector('h2').textContent;
+  dots.appendChild(a);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('show');
+    const i=days.indexOf(e.target);
+    dots.querySelectorAll('a').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+}),{threshold:.25});
+days.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

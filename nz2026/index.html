@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Zealand 2026 — Trip Highlights</title>
+<style>
+  :root{
+    --bg:#0e1418; --card:#162026; --ink:#e8eef1; --sub:#9db4bf;
+    --accent:#35c2a0; --accent2:#f2b04e; --line:#24333c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55)}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em}
+  .hero p{color:#cfdde3;font-size:19px;margin-top:14px;max-width:560px}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#cfdde3;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 38px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#3a4d58;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent2)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--line)}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"";position:absolute;left:0;top:10px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--accent)}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px}
+  .day p{color:#c6d4da;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent);border:1px solid #2b4a44;border-radius:999px;padding:4px 12px}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:var(--accent2);border-color:var(--accent2);background:#1c2a26}
+  a.tag.vid::after{content:" ▶";font-size:9px}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .25s,box-shadow .25s;display:block;background:#1c2a32}
+  .grid img:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(8,12,15,.94);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line)}
+  footer b{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <img src="photos/day11_3.jpg" alt="New Zealand landscape">
+  <div class="inner">
+    <div class="kicker">April – May 2026 · 14 Days · Two Islands</div>
+    <h1>New Zealand 2026</h1>
+    <p>Fourteen hours over the Pacific, a lost day at the date line, and two weeks of jumping off, out of, and into everything the country had to offer.</p>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>14</b><span>Days</span></div>
+  <div class="stat"><b>2</b><span>Islands</span></div>
+  <div class="stat"><b>1</b><span>Skydive</span></div>
+  <div class="stat"><b>1</b><span>SkyJump</span></div>
+  <div class="stat"><b>1st</b><span>Live kiwi</span></div>
+  <div class="stat"><b>952+</b><span>Photos &amp; videos</span></div>
+</div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="timeline">
+
+<section class="day" id="d1">
+  <div class="daylabel">Days 1–2 · Getting There</div>
+  <h2>The Long Way Down</h2>
+  <p>Six hours RDU to LA — TSA PreCheck and Clear were a smart move. A two-hour layover meant time to tour the airport lounges the new travel card unlocks (Cathay Pacific took the crown), then an overnight 787 Dreamliner to Auckland. Premium economy, first row: the only way a 14-hour flight becomes almost passable. Watched every episode of <em>The Pitt</em>.</p>
+  <div class="tags"><a class="tag" href="https://www.airnewzealand.co.nz/" target="_blank" rel="noopener">RDU → LAX → AKL · Air NZ</a><a class="tag" href="https://www.boeing.com/commercial/787" target="_blank" rel="noopener">787 Dreamliner</a><a class="tag" href="https://www.cathaypacific.com/" target="_blank" rel="noopener">Cathay Pacific lounge</a></div>
+</section>
+
+<section class="day" id="d3">
+  <div class="daylabel">Day 3 · Auckland</div>
+  <h2>Touchdown, Two Days Later</h2>
+  <p>Crossed the international date line and landed early morning. An Uber into downtown with a friendly Indian driver who covered the local news and the best Indian restaurants in one ride. Pro tip confirmed: do <em>not</em> rent a car straight off the long flight — they drive on the left, and the roundabouts are a masterclass in confusion.</p>
+  <p>The Grand Hotel by the Sky Tower let me check in early — a reminder to never cheap out on accommodations. You're supposed to stay awake until sunset to beat jet lag. I took a nap anyway.</p>
+  <div class="tags"><a class="tag" href="https://skycityauckland.co.nz/sky-tower/" target="_blank" rel="noopener">Sky Tower</a><a class="tag" href="https://skycityauckland.co.nz/hotels/the-grand-by-skycity/" target="_blank" rel="noopener">The Grand Hotel</a><a class="tag" href="https://heartofthecity.co.nz/dining" target="_blank" rel="noopener">Best restaurants · Auckland CBD</a></div>
+  <div class="grid" data-sec="day3"></div>
+</section>
+
+<section class="day" id="d4">
+  <div class="daylabel">Day 4 · Auckland</div>
+  <h2>Any Direction, See Where You End Up</h2>
+  <p>Woke up refreshed and just started walking — the best way to get a feel for a place. Auckland is busy by day and the harbour district is close. Then the classic first-day move: hop a bus and ride the loop. The Auckland Explorer Bus hit Mt Eden, the museum, the shopping district, the zoo, the harbour, the Sky Tower, and the aquarium — sharks and penguins included.</p>
+  <div class="tags"><a class="tag" href="https://www.explorerbus.co.nz/" target="_blank" rel="noopener">Explorer Bus</a><a class="tag" href="https://en.wikipedia.org/wiki/Maungawhau_/_Mount_Eden" target="_blank" rel="noopener">Mt Eden</a><a class="tag" href="https://www.visitsealife.com/auckland/" target="_blank" rel="noopener">Kelly Tarlton's Aquarium</a><a class="tag" href="https://www.viaduct.co.nz/" target="_blank" rel="noopener">Viaduct Harbour</a></div>
+  <div class="grid" data-sec="day4"></div>
+</section>
+
+<section class="day" id="d5">
+  <div class="daylabel">Day 5 · Auckland &amp; Waiheke</div>
+  <h2>All Blacks, Island Wine &amp; a Kiwi Lift Home</h2>
+  <p>Morning with the All Blacks tour and a visit to the stadium at Eden Park. Then the ferry across to Waiheke Island for a wine tour — Te Motu and several other world-famous vineyards close by — where I met up with two couples from Auckland and had a wonderful time.</p>
+  <p>Zipline and forest walk at EcoZip Adventures: a beautiful island experience with plenty of history. With only two roads and no transport, I started walking back to the ferry — until a friendly local Kiwi gave me a ride. Made it back to the hotel in time for their local special.</p>
+  <div class="tags"><a class="tag" href="https://edenpark.co.nz/experiences/stadium-tour/" target="_blank" rel="noopener">All Blacks · Eden Park tour</a><a class="tag" href="https://www.fullers.co.nz/" target="_blank" rel="noopener">Waiheke ferry · Fullers360</a><a class="tag" href="https://temotu.co.nz/" target="_blank" rel="noopener">Te Motu Vineyard</a><a class="tag" href="https://www.ecozipadventures.co.nz/" target="_blank" rel="noopener">EcoZip zipline</a></div>
+  <div class="grid" data-sec="day5"></div>
+</section>
+
+<section class="day" id="d6">
+  <div class="daylabel">Day 6 · North Island</div>
+  <h2>Out of a Perfectly Good Airplane</h2>
+  <p>Skydiving over the North Island — with a bonus chance to practice Chinese, since the safety briefing was in Mandarin. The GoPro caught everything my brain was too busy screaming to remember. Landed (twice) and celebrated with wonderful Indian food at the place recommended near Albert Park.</p>
+  <div class="tags"><a class="tag" href="https://skydiveauckland.com/" target="_blank" rel="noopener">Skydive Auckland</a><a class="tag vid" href="https://www.youtube.com/watch?v=ckW_kFD_ebQ" target="_blank" rel="noopener">Watch: 18,000 ft jump</a><a class="tag" href="https://en.wikipedia.org/wiki/Albert_Park,_Auckland" target="_blank" rel="noopener">Albert Park curry</a></div>
+  <div class="grid" data-sec="day6"></div>
+</section>
+
+<section class="day" id="d7">
+  <div class="daylabel">Day 7 · Auckland</div>
+  <h2>Sky Tower: Jump First, Walk Later</h2>
+  <p>SkyJump off the Sky Tower, then the tower walk — thanks to a wonderful fellow traveler who lent me the courage to do the walk around the rim. Then a hike out to the Auckland Zoo through Western Springs, with a stop at the technology museum on the way back.</p>
+  <p>The zoo had a kiwi feeding session run by one of the staff — the first time I've ever seen a live kiwi. (They're nocturnal birds.)</p>
+  <div class="tags"><a class="tag" href="https://skycityauckland.co.nz/sky-tower/skyjump-skywalk/skyjump/" target="_blank" rel="noopener">SkyJump</a><a class="tag" href="https://skycityauckland.co.nz/sky-tower/skyjump-skywalk/skywalk/" target="_blank" rel="noopener">SkyWalk</a><a class="tag" href="https://www.motat.nz/" target="_blank" rel="noopener">MOTAT tech museum</a><a class="tag" href="https://www.aucklandzoo.co.nz/" target="_blank" rel="noopener">Auckland Zoo · first live kiwi</a></div>
+  <div class="grid" data-sec="day7"></div>
+</section>
+
+<section class="day" id="d8">
+  <div class="daylabel">Day 8 · Rotorua</div>
+  <h2>Geothermal Country</h2>
+  <p>Picked up the rental — a Ford Everest — and drove south past Lake Taupō to the hot springs at Rotorua. Rafted the gorge, then capped the day with a Māori feast and a night walk. The Māori culture is fascinating, and steam rises out of the ground everywhere you look.</p>
+  <div class="tags"><a class="tag" href="https://www.polynesianspa.co.nz/" target="_blank" rel="noopener">Polynesian Spa · hot springs</a><a class="tag" href="https://www.rotorua-rafting.co.nz/kaituna-river-rafting" target="_blank" rel="noopener">Kaituna gorge rafting</a><a class="tag vid" href="https://www.youtube.com/watch?v=94AIbmMVAdI" target="_blank" rel="noopener">Watch: Tutea Falls drop</a><a class="tag" href="https://te-pa-tu.com/" target="_blank" rel="noopener">Te Pā Tū · Māori feast</a></div>
+  <div class="grid" data-sec="day8"></div>
+</section>
+
+<section class="day" id="d9">
+  <div class="daylabel">Day 9 · South Island</div>
+  <h2>Back to the City I Called Home</h2>
+  <p>A quick A220 hop to Christchurch, and a Subaru Outback waiting at the airport — the correct vehicle for what the South Island had planned. Good to be back in the city I called home for almost ten years.</p>
+  <div class="tags"><a class="tag" href="https://www.airnewzealand.co.nz/" target="_blank" rel="noopener">AKL → CHC · Air NZ</a><a class="tag" href="https://adinahotels.com/en/apartments/heritage-christchurch/" target="_blank" rel="noopener">Adina Heritage Christchurch</a><a class="tag" href="https://www.christchurchnz.com/" target="_blank" rel="noopener">Christchurch · old home town</a></div>
+  <div class="grid" data-sec="day9"></div>
+</section>
+
+<section class="day" id="d10">
+  <div class="daylabel">Day 10 · Christchurch &amp; Akaroa</div>
+  <h2>First Breath Underwater</h2>
+  <p>Morning in Hagley Park and the Botanic Gardens, then out to Akaroa Harbour — the place where I did my first open-water scuba dive. Some firsts you don't forget.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/Hagley_Park,_Christchurch" target="_blank" rel="noopener">Hagley Park</a><a class="tag" href="https://en.wikipedia.org/wiki/Christchurch_Botanic_Gardens" target="_blank" rel="noopener">Botanic Gardens</a><a class="tag" href="https://www.akaroa.com/" target="_blank" rel="noopener">Akaroa Harbour</a><a class="tag" href="https://www.padi.com/courses/open-water-diver" target="_blank" rel="noopener">First open-water dive</a></div>
+  <div class="grid" data-sec="day10"></div>
+</section>
+
+<section class="day" id="d11">
+  <div class="daylabel">Day 11 · Canterbury</div>
+  <h2>Mt Somers &amp; the Road to Edoras</h2>
+  <p>Out to Mt Somers and the Lord of the Rings filming location for King Théoden's Edoras. Standing where Rohan stood — worth every kilometre of gravel (and, as the rental company would later not notice, a few scratches from the bush).</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/Mount_Somers" target="_blank" rel="noopener">Mt Somers</a><a class="tag" href="https://en.wikipedia.org/wiki/Mount_Sunday" target="_blank" rel="noopener">Edoras · Mt Sunday · LOTR</a><a class="tag vid" href="https://www.youtube.com/watch?v=WM8iQu9T5TE" target="_blank" rel="noopener">Watch: Edoras by drone</a></div>
+  <div class="grid" data-sec="day11"></div>
+</section>
+
+<section class="day" id="d12">
+  <div class="daylabel">Day 12 · Christchurch</div>
+  <h2>Gateway to the Ice</h2>
+  <p>The International Antarctic Centre — the jumping-off point for scientists heading to McMurdo Station, Scott Base, and the Amundsen–Scott South Pole Station. Every year, this is where we would kit up before deploying to Antarctica, so this stop was personal.</p>
+  <p>Checked in to make sure the huskies and penguins were doing well. The huskies have retired from hauling 300-lb Nansen sleds across the ice and are now full-time celebrities at the deployment centre, entertaining tourists.</p>
+  <div class="tags"><a class="tag" href="https://www.iceberg.co.nz/" target="_blank" rel="noopener">International Antarctic Centre</a><a class="tag" href="https://en.wikipedia.org/wiki/McMurdo_Station" target="_blank" rel="noopener">McMurdo · Scott Base</a><a class="tag" href="https://www.iceberg.co.nz/" target="_blank" rel="noopener">Retired huskies &amp; penguins</a></div>
+  <div class="grid" data-sec="day12"></div>
+</section>
+
+<section class="day" id="d13">
+  <div class="daylabel">Day 13 · Mackenzie Country</div>
+  <h2>Lake Tekapo, After Dark</h2>
+  <p>A beautiful South Island drive with a soak in the natural hot springs, then the night-sky tour at Lake Tekapo in the heart of one of the world's great dark-sky reserves. The Southern Cross was amazing — the southern hemisphere sky is a different sky entirely.</p>
+  <div class="tags"><a class="tag" href="https://www.darkskyproject.co.nz/" target="_blank" rel="noopener">Dark Sky Project · Tekapo</a><a class="tag" href="https://en.wikipedia.org/wiki/Crux" target="_blank" rel="noopener">Southern Cross</a><a class="tag" href="https://tekaposprings.co.nz/" target="_blank" rel="noopener">Tekapo Springs</a><a class="tag" href="https://www.mackenzienz.com/" target="_blank" rel="noopener">Mackenzie Country</a></div>
+  <div class="grid" data-sec="day13"></div>
+</section>
+
+<section class="day" id="d14">
+  <div class="daylabel">Day 14 · Homeward</div>
+  <h2>Arrive Before You Left</h2>
+  <p>Back to Christchurch airport — petrol on the way, rental dropped, scratches unnoticed. Two hours later, dinner and drinks in the Air New Zealand lounge in Auckland; ANZ really knows how to take care of travelers. Paid extra for first class and those lay-flat seats made all the difference on the 14-hour leg home.</p>
+  <p>Houston was hot and humid after NZ autumn, United was a shock after ANZ, and it never ceases to amaze me that you can travel all day and still arrive before you left. Back at RDU, a valiant attempt to relearn driving on the right. My apologies to anyone I may have offended.</p>
+  <div class="tags"><span class="tag">CHC → AKL → IAH → RDU</span><a class="tag" href="https://www.airnewzealand.co.nz/" target="_blank" rel="noopener">Air New Zealand first class</a><a class="tag" href="https://en.wikipedia.org/wiki/International_Date_Line" target="_blank" rel="noopener">Date line, again</a></div>
+</section>
+
+</div>
+
+<footer>Built from the travel journal &amp; 950+ photos · <b>New Zealand, April–May 2026</b><br><br><a href="../index.html" style="color:var(--accent);text-decoration:none">⌂ All trips</a> &nbsp;·&nbsp; <a href="../italy2025/index.html" style="color:var(--accent);text-decoration:none">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../colorado2025/index.html" style="color:var(--accent);text-decoration:none">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../italy2024/index.html" style="color:var(--accent);text-decoration:none">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../italy2022/index.html" style="color:var(--accent);text-decoration:none">Assisi 2022 — In the Footsteps of Saint Francis →</a> &nbsp;·&nbsp; <a href="../antarctica/index.html" style="color:var(--accent);text-decoration:none">Antarctica 1998 — Vernadsky Station →</a></footer>
+
+<div id="lb">
+  <button class="close" onclick="closeLB()">×</button>
+  <button class="prev" onclick="step(-1)">‹</button>
+  <img id="lbimg" src="" alt="">
+  <div class="cap" id="lbcap"></div>
+  <button class="next" onclick="step(1)">›</button>
+</div>
+
+<script>
+const MANIFEST = {"day3": ["day3_1.jpg", "day3_2.jpg", "day3_3.jpg", "day3_4.jpg", "day3_5.jpg", "day3_6.jpg"], "day4": ["day4_1.jpg", "day4_2.jpg", "day4_3.jpg", "day4_4.jpg", "day4_5.jpg", "day4_6.jpg"], "day5": ["day5_1.jpg", "day5_2.jpg", "day5_3.jpg", "day5_4.jpg", "day5_5.jpg", "day5_6.jpg"], "day6": ["day6_1.jpg", "day6_2.jpg", "day6_3.jpg", "day6_4.jpg", "day6_5.jpg", "day6_6.jpg"], "day7": ["day7_1.jpg", "day7_2.jpg", "day7_3.jpg", "day7_4.jpg", "day7_5.jpg", "day7_6.jpg"], "day8": ["day8_1.jpg", "day8_2.jpg", "day8_3.jpg", "day8_4.jpg", "day8_5.jpg", "day8_6.jpg"], "day9": ["day9_1.jpg", "day9_2.jpg", "day9_3.jpg", "day9_4.jpg", "day9_5.jpg", "day9_6.jpg"], "day10": ["day10_1.jpg", "day10_2.jpg", "day10_3.jpg", "day10_4.jpg", "day10_5.jpg", "day10_6.jpg"], "day11": ["day11_1.jpg", "day11_2.jpg", "day11_3.jpg", "day11_4.jpg", "day11_5.jpg", "day11_6.jpg"], "day12": ["day12_1.jpg", "day12_2.jpg", "day12_3.jpg", "day12_4.jpg", "day12_5.jpg", "day12_6.jpg"], "day13": ["day13_1.jpg", "day13_2.jpg", "day13_3.jpg", "day13_4.jpg", "day13_5.jpg", "day13_6.jpg"]};
+const CAPTIONS = {
+  day3:"Day 3 — Arrival in Auckland", day4:"Day 4 — Exploring Auckland",
+  day5:"Day 5 — All Blacks, Waiheke Island & EcoZip", day6:"Day 6 — Skydiving the North Island",
+  day7:"Day 7 — SkyJump, Sky Tower & first live kiwi", day8:"Day 8 — Rotorua & geothermal country",
+  day9:"Day 9 — Flight to Christchurch", day10:"Day 10 — Hagley Park & Akaroa",
+  day11:"Day 11 — Mt Somers / Edoras", day12:"Day 12 — International Antarctic Centre",
+  day13:"Day 13 — Lake Tekapo night sky"
+};
+// populate grids
+let all = [];
+document.querySelectorAll('.grid').forEach(g=>{
+  const sec = g.dataset.sec;
+  (MANIFEST[sec]||[]).forEach(name=>{
+    const img = document.createElement('img');
+    img.src = 'photos/'+name; img.loading='lazy'; img.alt = CAPTIONS[sec]||sec;
+    const idx = all.length; all.push({src:img.src, cap:CAPTIONS[sec]||sec});
+    img.onclick = ()=>openLB(idx);
+    g.appendChild(img);
+  });
+});
+// lightbox
+let cur=0;
+const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
+function openLB(i){cur=i; render(); lb.classList.add('open')}
+function closeLB(){lb.classList.remove('open')}
+function step(d){cur=(cur+d+all.length)%all.length; render()}
+function render(){lbimg.src=all[cur].src; lbcap.textContent=all[cur].cap+'  ·  '+(cur+1)+' / '+all.length}
+lb.onclick=e=>{if(e.target===lb)closeLB()}
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
+});
+// scroll reveal + nav dots
+const days=[...document.querySelectorAll('section.day')];
+const dots=document.getElementById('dots');
+days.forEach(s=>{
+  const a=document.createElement('a'); a.href='#'+s.id; a.title=s.querySelector('h2').textContent;
+  dots.appendChild(a);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('show');
+    const i=days.indexOf(e.target);
+    dots.querySelectorAll('a').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+}),{threshold:.25});
+days.forEach(s=>io.observe(s));
+</script>
+<!-- v3 links -->
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antarctica 1998 — Vernadsky Station</title>
+<style>
+  :root{
+    --bg:#0b1216; --card:#132029; --ink:#e6eef2; --sub:#93aab6;
+    --accent:#7fd4e8; --accent2:#e0a15c; --line:#20323d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.68)}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,rgba(6,11,15,.92) 0%,rgba(6,11,15,.55) 34%,rgba(6,11,15,.12) 62%,rgba(6,11,15,0) 82%)}
+  .hero .inner{z-index:1}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em}
+  .hero p{color:#cfdde3;font-size:19px;margin-top:14px;max-width:560px}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#cfdde3;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 38px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#33505e;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent2)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--line)}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"";position:absolute;left:0;top:10px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--accent)}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px}
+  .day p{color:#c3d5dd;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent);border:1px solid #26505c;border-radius:999px;padding:4px 12px}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:var(--accent2);border-color:var(--accent2);background:#162b33}
+  a.tag.vid::after{content:" ▶";font-size:9px}
+  .aside{border-left:2px solid var(--line);padding-left:16px;margin:14px 0 20px;max-width:640px;
+         font-family:Verdana,sans-serif;font-size:12.5px;line-height:1.75;color:var(--sub)}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .25s,box-shadow .25s;display:block;background:#16262f}
+  .grid img:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(6,10,13,.94);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em;text-align:center;padding:0 24px}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line)}
+  footer b{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <img src="photos/hero.jpg" alt="Vernadsky Station from the water, the Ukrainian flag flying">
+  <div class="inner">
+    <div class="kicker">April 1998 · Argentine Islands · Antarctic Peninsula</div>
+    <h1>Vernadsky Station</h1>
+    <p>Zodiacs from the <em>Laurence M. Gould</em> through the sea ice to the Ukrainian base on Galindez Island — a desalination plant, a British-built bar, and the best vodka on the peninsula.</p>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>1998</b><span>April</span></div>
+  <div class="stat"><b>7</b><span>Photographs</span></div>
+  <div class="stat"><b>2:25</b><span>Film</span></div>
+  <div class="stat"><b>1</b><span>Zodiac crossing</span></div>
+  <div class="stat"><b>1</b><span>Station tour</span></div>
+</div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="timeline">
+
+<section class="day" id="d1">
+  <div class="daylabel">The Crossing</div>
+  <h2>Through the Ice, After Dark</h2>
+  <p>Winter-overs at Palmer Station were allowed to visit the other bases along the peninsula, and Vernadsky was the one everybody wanted to see. Getting there meant Zodiacs off the <em>Laurence M. Gould</em>, working through sea ice for the last of it.</p>
+  <p>It was Antarctic dark by the time we got ashore. That is the whole reason there is no film of the visit itself — the camera came out on the boat, and then the light was gone. What survives of the station is seven photographs.</p>
+  <div class="tags"><a class="tag vid" href="https://www.youtube.com/watch?v=9Z8XVojuX40" target="_blank" rel="noopener">Vernadsky 1998 — the crossing &amp; the photographs</a><a class="tag" href="https://en.wikipedia.org/wiki/RV_Laurence_M._Gould" target="_blank" rel="noopener">RV Laurence M. Gould</a></div>
+  <div class="grid" data-sec="crossing"></div>
+</section>
+
+<section class="day" id="d2">
+  <div class="daylabel">The Station</div>
+  <h2>Faraday, Under New Management</h2>
+  <p>Vernadsky was British before it was Ukrainian. This was Faraday Station, one of the long-running British bases on the peninsula, handed over to Ukraine in 1996 — and much of what the British built is still standing and still in use, which is a good part of the station's charm.</p>
+  <p>Victor, the station manager, gave us the tour. They run a saltwater desalination plant, which is less glamorous than it sounds and more important than almost anything else on a rock in the Southern Ocean. They also make excellent vodka.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/Vernadsky_Research_Base" target="_blank" rel="noopener">Vernadsky Research Base</a><span class="tag">Galindez Island</span><span class="tag">Ukrainian Antarctic Expedition</span></div>
+  <div class="grid" data-sec="station"></div>
+</section>
+
+<section class="day" id="d3">
+  <div class="daylabel">The Bar</div>
+  <h2>The Southernmost Bar Worth the Trip</h2>
+  <p>The bar came with the building. The British carpenters built it out of timber meant for a pier, and when the base changed hands the bar changed hands with it. Posts and beams, a proper counter, ship's flags overhead, and photographs of the place in earlier decades on every wall.</p>
+  <p>It is the reason people talk about Vernadsky. On the evidence of these two photographs, the reputation is earned.</p>
+  <div class="grid" data-sec="bar"></div>
+  <div class="aside">A note on the pictures. The dusk photograph of the run in had lost nearly all of its colour; it is printed here as a toned monochrome — the detail is real, the colour is a choice rather than a recovery. The orange flare across the dancing photograph is a light leak in the original negative, left as it was.</div>
+</section>
+
+</div>
+
+<footer>Built from seven photographs and one tape · <b>Vernadsky Station, April 1998</b><br><br><a href="../index.html" style="color:var(--accent);text-decoration:none">⌂ All trips</a> &nbsp;·&nbsp; <a href="../nz2026/index.html" style="color:var(--accent);text-decoration:none">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../italy2025/index.html" style="color:var(--accent);text-decoration:none">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../colorado2025/index.html" style="color:var(--accent);text-decoration:none">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../italy2024/index.html" style="color:var(--accent);text-decoration:none">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../italy2022/index.html" style="color:var(--accent);text-decoration:none">Assisi 2022 — In the Footsteps of Saint Francis →</a></footer>
+
+<div id="lb">
+  <button class="close" onclick="closeLB()">×</button>
+  <button class="prev" onclick="step(-1)">‹</button>
+  <img id="lbimg" src="" alt="">
+  <div class="cap" id="lbcap"></div>
+  <button class="next" onclick="step(1)">›</button>
+</div>
+
+<script>
+const MANIFEST = {"crossing": ["crossing_1.jpg", "crossing_2.jpg"], "station": ["station_1.jpg", "station_2.jpg", "station_3.jpg"], "bar": ["bar_1.jpg", "bar_2.jpg"]};
+const CAPTIONS = {
+  crossing_1:"Arriving at dusk — printed as a toned monochrome",
+  crossing_2:"Vernadsky from the water, the Ukrainian flag flying",
+  station_1:"Inside the station during the tour",
+  station_2:"The lounge, with a harpoon above the door",
+  station_3:"The station's own postcard — Станція Академік Вернадський",
+  bar_1:"The bar the British built, and the Ukrainians inherited",
+  bar_2:"Dancing — the orange flare is a light leak in the original"
+};
+let all = [];
+document.querySelectorAll('.grid').forEach(g=>{
+  const sec = g.dataset.sec;
+  (MANIFEST[sec]||[]).forEach(name=>{
+    const img = document.createElement('img');
+    img.src = 'photos/'+name; img.loading='lazy'; img.alt = CAPTIONS[name]||sec;
+    const idx = all.length; all.push({src:img.src, cap:CAPTIONS[name]||sec});
+    img.onclick = ()=>openLB(idx);
+    g.appendChild(img);
+  });
+});
+let cur=0;
+const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
+function openLB(i){cur=i; render(); lb.classList.add('open')}
+function closeLB(){lb.classList.remove('open')}
+function step(d){cur=(cur+d+all.length)%all.length; render()}
+function render(){lbimg.src=all[cur].src; lbcap.textContent=all[cur].cap+'  ·  '+(cur+1)+' / '+all.length}
+lb.onclick=e=>{if(e.target===lb)closeLB()}
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
+});
+const days=[...document.querySelectorAll('section.day')];
+const dots=document.getElementById('dots');
+days.forEach(s=>{
+  const a=document.createElement('a'); a.href='#'+s.id; a.title=s.querySelector('h2').textContent;
+  dots.appendChild(a);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('show');
+    const i=days.indexOf(e.target);
+    dots.querySelectorAll('a').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+}),{threshold:.25});
+days.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

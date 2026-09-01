@@ -1,0 +1,11 @@
+# Legacy: New Zealand photos originally lived at /photos/ before that trip was
+# moved into /nz2026/. Kept so old inbound links and bookmarks still resolve.
+#
+# WARNING: this catches ALL root-absolute /photos/ requests, site-wide. Trip
+# pages must use relative paths (photos/foo.jpg), never /photos/foo.jpg, or
+# their images will be silently redirected into the New Zealand gallery.
+# Every current page uses relative paths, so nothing depends on this rule today.
+/photos/*                        /nz2026/photos/:splat        301
+
+# The old 26 MB single-file export at the root. Superseded by /nz2026/.
+/New%20Zealand%202026.html       /nz2026/                     301

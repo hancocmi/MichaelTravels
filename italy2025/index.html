@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italy 2025 — A Jubilee Year Pilgrimage</title>
+<style>
+  :root{
+    --bg:#f7f1e3; --card:#efe6d0; --ink:#33261a; --sub:#7a6a52;
+    --accent:#8e1f1f; --accent2:#b08d2e; --line:#dccfb2; --gold:#b08d2e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden;background:#1c1a16}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.62)}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:#e6c96a;margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em;color:#f7f1e3}
+  .hero p{color:#eee3c8;font-size:19px;margin-top:14px;max-width:600px}
+  .hero .motto{margin-top:10px;font-style:italic;color:#e6c96a;font-size:15px;letter-spacing:.08em}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#eee3c8;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 34px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#c9b98f;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent2)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--gold);opacity:.45}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"✠";position:absolute;left:-4px;top:2px;font-size:17px;color:var(--accent);background:var(--bg);line-height:1;padding:2px 0}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px;color:#4a2c17}
+  .day p{color:#4d3d29;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent);border:1px solid #cbb27e;border-radius:999px;padding:4px 12px;background:#f2ead6}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:#fff;border-color:var(--accent);background:var(--accent)}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .25s,box-shadow .25s;display:block;background:#e3d7ba;border:1px solid var(--line)}
+  .grid img:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(60,40,10,.35)}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(20,14,8,.95);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:#d8c79a;font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line);background:var(--card)}
+  footer b{color:var(--accent)}
+  footer a{color:var(--accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  footer .cross{font-size:18px;color:var(--gold);display:block;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <img src="photos/hero.jpg" alt="Bernini's colonnade at St Peter's Square">
+  <div class="inner">
+    <div class="kicker">October – November 2025 · Anno Santo · Perugia → Assisi → Roma</div>
+    <h1>Italy 2025 — A Jubilee Pilgrimage</h1>
+    <p>A 13th-century castle in Umbria, the footpaths of Saint Francis, and a green volunteer vest at the Holy Door — one pilgrim's Holy Year, on foot and by train.</p>
+    <div class="motto">« Peregrinantes in Spem » — Pilgrims of Hope</div>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>3</b><span>Cities</span></div>
+  <div class="stat"><b>1</b><span>Holy Door</span></div>
+  <div class="stat"><b>7</b><span>Pilgrim churches</span></div>
+  <div class="stat"><b>3</b><span>Days volunteering</span></div>
+  <div class="stat"><b>1st</b><span>Confession in Spanish</span></div>
+  <div class="stat"><b>545+</b><span>Photos &amp; videos</span></div>
+</div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="timeline">
+
+<section class="day" id="s1">
+  <div class="daylabel">Tappa 1 · Getting There</div>
+  <h2>Atlanta to Umbria, the Slow Way</h2>
+  <p>Nine hours from Atlanta to Rome — Delta premium economy on an A350 is the way to go. Straight off the plane and onto the rails: FCO to Termini, then the regional to Perugia by way of the Umbrian hills. The Italian trains are faster than flying, clean, and you meet people — like the Spanish students on holiday from Barcelona who quickly taught me that my Chilean Spanish is not even close to real Spanish Spanish.</p>
+  <div class="tags"><a class="tag" href="https://www.iubilaeum2025.va/en/giubileo-2025/lettera-di-papa-francesco.html" target="_blank" rel="noopener">Letter of Pope Francis · Jubilee 2025</a><span class="tag">ATL → FCO · Delta A350</span><a class="tag" href="https://www.trenitalia.com/" target="_blank" rel="noopener">Trenitalia · FCO → Perugia</a></div>
+  <div class="grid" data-sec="viaggio"></div>
+</section>
+
+<section class="day" id="s2">
+  <div class="daylabel">Tappa 2 · Perugia</div>
+  <h2>A Castle on the Path of Saint Francis</h2>
+  <p>Home base: a real 13th-century castle outside town, Castello di Monterone. The owner distills his own gin from juniper berries he grows in Gubbio — Winston Churchill quality — and the restaurant has only a few well-appointed tables and wonderful staff. This is stepping back in time.</p>
+  <p>The castle sits on the very path Saint Francis walked in the 12th century, which let me finish the last stretches of the Via di Francesco I didn't get to last year. Last year I stayed in the city center; this year the countryside won.</p>
+  <div class="tags"><a class="tag" href="https://castellomonterone.com/it/" target="_blank" rel="noopener">Castello di Monterone</a><a class="tag" href="https://castellomonterone.com/it/ristorante/" target="_blank" rel="noopener">The Castle restaurant</a><a class="tag" href="https://www.viadifrancesco.it/en/" target="_blank" rel="noopener">Via di Francesco</a></div>
+  <div class="grid" data-sec="castello"></div>
+</section>
+
+<section class="day" id="s3">
+  <div class="daylabel">Tappa 3 · Perugia</div>
+  <h2>Centro Storico: Etruscans, the Minimetro &amp; Halloween</h2>
+  <p>Forty minutes on foot from the castle, past the old cemetery and through ancient Etruscan walls, to the heart of Perugia — the Etruscans were here before the Romans ever showed up. The Minimetro drops you from the old fortress heights to the rest of the city for one euro, with a bird's-eye view on the way down. Farmers market every Saturday: must visit.</p>
+  <p>Perugia is a college town — universities, three big hospitals, a huge student population — and Halloween here is really special: kids in costume going store to store, a non-stop merry-go-round, and chocolate everywhere. Don't miss the Etruscan well, the wall gates, and the underground streets beneath the fortress.</p>
+  <div class="tags"><a class="tag" href="https://www.myitaliandiaries.com/italian-passeggiata-what-exactly-is-that/" target="_blank" rel="noopener">The passeggiata</a><a class="tag" href="https://gallerianazionaledellumbria.it/" target="_blank" rel="noopener">National Gallery of Umbria</a><a class="tag" href="https://en.wikipedia.org/wiki/Perugia" target="_blank" rel="noopener">Perugia</a><a class="tag" href="https://en.wikipedia.org/wiki/Etruscan_Well" target="_blank" rel="noopener">Etruscan well</a></div>
+  <div class="grid" data-sec="perugia"></div>
+</section>
+
+<section class="day" id="s4">
+  <div class="daylabel">Tappa 4 · Assisi</div>
+  <h2>Walking Up to the City of Saint Francis</h2>
+  <p>Ten minutes from Perugia by train — three hours on foot, my way. Started in Santa Maria degli Angeli (the city Los Angeles is named for) and hiked the sidewalk trail up the hill. Stopped to watch a farmer harvesting green olives; she showed me how it's done. Some pilgrims from Molise more or less adopted me — we sang songs on the steps at San Damiano and watched rainbows over Mount Subasio.</p>
+  <p>At the Basilica of Saint Francis I asked the priests to say a prayer for the fraternity back in North Carolina — two euros later it was done; even with a vow of poverty, these Franciscans have a knack for turning a buck. The English confessionals were all full, so I made my first confession ever in Spanish. By nightfall, mass at the Basilica of Saint Clare, built over 11th-century remains you can see through the floor.</p>
+  <p>Hiked up to Rocca Maggiore — closed last year for earthquake repairs — where the Assisi militia once watched for those pesky Perugia invaders. Now a local Labrador wanders the grounds and keeps intruders at bay. Assisi after dark, when the tourists leave, is the best time: street performers, evening markets, and you can almost hear Francis and his friends waking up the neighbors.</p>
+  <div class="tags"><a class="tag" href="https://www.sanfrancescoassisi.org/" target="_blank" rel="noopener">Basilica of Saint Francis</a><a class="tag" href="https://www.assisisantachiara.it/" target="_blank" rel="noopener">Basilica of Saint Clare</a><a class="tag" href="https://en.wikipedia.org/wiki/San_Damiano,_Assisi" target="_blank" rel="noopener">San Damiano</a><a class="tag" href="https://en.wikipedia.org/wiki/Rocca_Maggiore" target="_blank" rel="noopener">Rocca Maggiore</a></div>
+  <div class="grid" data-sec="assisi"></div>
+</section>
+
+<section class="day" id="s5">
+  <div class="daylabel">Tappa 5 · Roma</div>
+  <h2>The Eternal City, Finally Given Its Due</h2>
+  <p>Train from Perugia to Termini, then a five-minute walk west into Monti — staying on the right side of the tracks at The Fifteen Keys, where the cook took me aside and showed me how to make some of the Italian specialties. Previously I'd always breeze through Rome on the way to Assisi; this time I realized what I'd been missing. It's a big modern city built on thousands of years of history. Trastevere alone is worth a week.</p>
+  <p>Get the Roma Pass on your phone — the Metro is everywhere and everyone is on it. There's even a brand-new Metro C stop at the Colosseum. Trevi, the Pantheon, the Tiber at dusk, and a da Vinci exhibition for good measure.</p>
+  <div class="tags"><a class="tag" href="https://fifteenkeys.com/" target="_blank" rel="noopener">The Fifteen Keys · Monti</a><a class="tag" href="https://en.wikipedia.org/wiki/Pantheon,_Rome" target="_blank" rel="noopener">Pantheon</a><a class="tag" href="https://www.romapass.it/en/" target="_blank" rel="noopener">Roma Pass</a></div>
+  <div class="grid" data-sec="roma"></div>
+</section>
+
+<section class="day" id="s6">
+  <div class="daylabel">Tappa 6 · Roma Antica</div>
+  <h2>The Colosseum &amp; the Palatine Hill</h2>
+  <p>You can't miss the Colosseum — literally. And don't skip the Palatine Hill, the heart of ancient Rome: well worth the hike up to see where the rich and famous used to hang out, with the Forum spread out below. Sunbeams through two-thousand-year-old arches all morning long.</p>
+  <div class="tags"><a class="tag" href="https://colosseo.it/en/" target="_blank" rel="noopener">Colosseum</a><a class="tag" href="https://en.wikipedia.org/wiki/Palatine_Hill" target="_blank" rel="noopener">Palatine Hill</a><a class="tag" href="https://en.wikipedia.org/wiki/Roman_Forum" target="_blank" rel="noopener">Roman Forum</a></div>
+  <div class="grid" data-sec="antica"></div>
+</section>
+
+<section class="day" id="s7">
+  <div class="daylabel">Tappa 7 · Il Vaticano</div>
+  <h2>Bouncer at the Holy Door</h2>
+  <p>Scheduled to volunteer at the Vatican for four days; showed up for three. The job: escort pilgrims queued along Via della Conciliazione through the Holy Door at St Peter's, and make sure nobody jumps the queue or talks annoyingly on their cell phone. Sort of like being a bouncer at a very well-behaved bar.</p>
+  <p>The perks are real: free access to St Peter's and the Vatican Museums, a dedicated security line, and a green vest that lets you wander the back areas where people actually work, live, and park (I love those little pink Fiat 500s). Don't miss the changing of the Swiss Guard at the side entrance. Secret tip: the McDonald's by the Vatican is the most popular spot with the locals — open early, before anything else.</p>
+  <div class="tags"><a class="tag" href="https://www.vaticannews.va/en/pope/news/2024-12/pope-francis-opens-holy-door-ushering-in-the-jubilee-of-hope.html" target="_blank" rel="noopener">The Holy Door · Vatican News</a><a class="tag" href="https://www.basilicasanpietro.va/en" target="_blank" rel="noopener">St Peter's Basilica</a><a class="tag" href="https://en.wikipedia.org/wiki/Swiss_Guard" target="_blank" rel="noopener">Swiss Guard</a></div>
+  <div class="grid" data-sec="vaticano"></div>
+</section>
+
+<section class="day" id="s8">
+  <div class="daylabel">Tappa 8 · Le Sette Chiese</div>
+  <h2>Seven Doors Open Only in a Holy Year</h2>
+  <p>Off to the seven pilgrim churches of Rome, whose Jubilee doors open only during a Holy Year. The hotel was right down the street from the Basilica of Santa Maria Maggiore — where Pope Francis is buried — close enough to see the back of the basilica from my balcony. Gold, marble, and two thousand years of prayers.</p>
+  <div class="tags"><a class="tag" href="https://www.romecabs.com/blog/docs/jubilee-major-pilgrim-churches-in-rome/" target="_blank" rel="noopener">The 7 pilgrim churches</a><a class="tag" href="https://en.wikipedia.org/wiki/Santa_Maria_Maggiore" target="_blank" rel="noopener">Santa Maria Maggiore</a></div>
+  <div class="grid" data-sec="chiese"></div>
+</section>
+
+<section class="day" id="s9">
+  <div class="daylabel">Tappa 9 · Homeward</div>
+  <h2>Arrivederci, Roma</h2>
+  <p>After last year's rail-strike fiasco, I hired a car to the airport — 100 euros versus 12, but I wasn't going to be stranded at Terminal 2 again. Air France this time, a Boeing 777 through Charles de Gaulle, which lived up to its confusing reputation: wrong train stop, nearly missed the flight, then a bus ride to a plane parked twenty minutes away — almost like they wanted the Americans as far away as possible. Don't blame them at all.</p>
+  <p>Eight hours later, back at RDU, where customs is quick and civilized. "Did you bring us chocolate?" Yes. Found the car at Econo Park 3 and remembered that driving is no longer a competitive sport.</p>
+  <div class="tags"><span class="tag">FCO → CDG → RDU · Air France 777</span><a class="tag" href="https://1drv.ms/f/c/503cbfd97efaaadb/IgAAM6QZSsdkTZhiSrMthLuqATSJoKq90WtGWR61ojuioVc?e=RcMGfl" target="_blank" rel="noopener">Full photo album · OneDrive</a></div>
+</section>
+
+</div>
+
+<footer>
+  <span class="cross">✠</span>
+  Built from the travel journal &amp; 545+ photos · <b>Italy, October–November 2025 · Jubilee Year</b><br><br>
+  <a href="../index.html">⌂ All trips</a> &nbsp;·&nbsp; <a href="../nz2026/index.html">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../colorado2025/index.html">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../italy2024/index.html">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../italy2022/index.html">Assisi 2022 — In the Footsteps of Saint Francis →</a> &nbsp;·&nbsp; <a href="../antarctica/index.html">Antarctica 1998 — Vernadsky Station →</a>
+</footer>
+
+<div id="lb">
+  <button class="close" onclick="closeLB()">×</button>
+  <button class="prev" onclick="step(-1)">‹</button>
+  <img id="lbimg" src="" alt="">
+  <div class="cap" id="lbcap"></div>
+  <button class="next" onclick="step(1)">›</button>
+</div>
+
+<script>
+const MANIFEST = {
+  viaggio: ["20251029_111838.jpg","20251029_111850.jpg"],
+  castello: ["20251029_144325.jpg","20251029_144326.jpg","20251029_144328.jpg","20251029_144332.jpg","20251029_144336.jpg"],
+  perugia: ["20251030_104144.jpg","20251030_105441.jpg","20251030_110255.jpg","20251101_104859.jpg","20251101_105302.jpg","20251030_113833.jpg","20251030_120437.jpg","20251030_134721.jpg","20251101_111540.jpg","20251101_193911.jpg"],
+  assisi: ["20251031_093051.jpg","20251031_100045.jpg","20251031_102335.jpg","20251031_104429.jpg","20251031_112500.jpg","20251031_115946.jpg","20251031_152154.jpg"],
+  roma: ["20251102_100222.jpg","20251102_103105.jpg","20251102_110813.jpg","20251102_133445.jpg","20251102_143034.jpg","20251102_191856.jpg"],
+  antica: ["20251103_075520.jpg","20251103_082654.jpg","20251103_083137.jpg","20251103_094303.jpg","20251103_112845.jpg","20251103_113024.jpg"],
+  vaticano: ["20251104_092816.jpg","20251104_101110.jpg","20251104_101600.jpg","20251102_123210.jpg","20251102_122906.jpg","20251104_113826.jpg","20251104_114447.jpg"],
+  chiese: ["20251103_165516.jpg","20251103_165756.jpg","20251103_170042.jpg","20251103_170525.jpg","20251102_120842.jpg"]
+};
+const CAPTIONS = {
+  viaggio:"Tappa 1 — By rail through Umbria",
+  castello:"Tappa 2 — Castello di Monterone, Perugia",
+  perugia:"Tappa 3 — Perugia, Centro Storico",
+  assisi:"Tappa 4 — Assisi, city of Saint Francis",
+  roma:"Tappa 5 — Roma, the Eternal City",
+  antica:"Tappa 6 — Colosseum & Palatine Hill",
+  vaticano:"Tappa 7 — The Vatican & the Holy Door",
+  chiese:"Tappa 8 — Santa Maria Maggiore & the pilgrim churches"
+};
+// populate grids
+let all = [];
+document.querySelectorAll('.grid').forEach(g=>{
+  const sec = g.dataset.sec;
+  (MANIFEST[sec]||[]).forEach(name=>{
+    const img = document.createElement('img');
+    img.src = 'photos/'+name; img.loading='lazy'; img.alt = CAPTIONS[sec]||sec;
+    const idx = all.length; all.push({src:img.src, cap:CAPTIONS[sec]||sec});
+    img.onclick = ()=>openLB(idx);
+    g.appendChild(img);
+  });
+});
+// lightbox
+let cur=0;
+const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
+function openLB(i){cur=i; render(); lb.classList.add('open')}
+function closeLB(){lb.classList.remove('open')}
+function step(d){cur=(cur+d+all.length)%all.length; render()}
+function render(){lbimg.src=all[cur].src; lbcap.textContent=all[cur].cap+'  ·  '+(cur+1)+' / '+all.length}
+lb.onclick=e=>{if(e.target===lb)closeLB()}
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
+});
+// scroll reveal + nav dots
+const days=[...document.querySelectorAll('section.day')];
+const dots=document.getElementById('dots');
+days.forEach(s=>{
+  const a=document.createElement('a'); a.href='#'+s.id; a.title=s.querySelector('h2').textContent;
+  dots.appendChild(a);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('show');
+    const i=days.indexOf(e.target);
+    dots.querySelectorAll('a').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+}),{threshold:.25});
+days.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

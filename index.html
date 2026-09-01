@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michael Travels</title>
+<style>
+  :root{
+    --bg:#f5f1e6; --card:#fffdf6; --ink:#2e2619; --sub:#7c7157;
+    --accent:#3f5e63; --accent2:#b5622e; --line:#ddd3b8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.6}
+
+  header{max-width:1100px;margin:0 auto;padding:72px 5vw 36px;text-align:center}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px}
+  h1{font-size:clamp(40px,7vw,72px);font-weight:400;letter-spacing:.01em;color:#3a2f1c}
+  header p{color:var(--sub);font-size:18px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto}
+  .rule{width:64px;height:2px;background:var(--accent2);margin:26px auto 0;opacity:.7}
+
+  .grid{max-width:1100px;margin:0 auto;padding:28px 5vw 60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
+  a.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s}
+  a.card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(70,55,20,.22)}
+  .card .imgwrap{position:relative;height:230px;overflow:hidden;background:#d9cfae}
+  .card img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  a.card:hover img{transform:scale(1.05)}
+  .card .date{position:absolute;top:14px;left:14px;background:rgba(30,24,12,.72);color:#f5f1e6;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+  .card .body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .card h2{font-size:24px;font-weight:400;color:#3a2f1c}
+  .card p{color:#5d5238;font-size:15.5px;flex:1}
+  .card .meta{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-top:6px}
+  .card .meta::after{content:" →";color:var(--accent)}
+
+  footer{text-align:center;padding:40px 20px 64px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line)}
+  footer b{color:var(--accent2)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Travel journals &amp; photographs</div>
+  <h1>Michael Travels</h1>
+  <p>Trip logs from the road — hill towns and holy doors, skydives and train strikes, built from travel journals and a few thousand photos.</p>
+  <div class="rule"></div>
+</header>
+
+<div class="grid">
+
+  <a class="card" href="nz2026/index.html">
+    <div class="imgwrap">
+      <img src="nz2026/photos/day11_3.jpg" alt="New Zealand landscape" loading="lazy">
+      <span class="date">Apr – May 2026</span>
+    </div>
+    <div class="body">
+      <h2>New Zealand 2026</h2>
+      <p>Fourteen days, two islands, one lost day at the date line — skydiving, SkyJumping, Edoras, and a first live kiwi.</p>
+      <span class="meta">14 days · 952+ photos</span>
+    </div>
+  </a>
+
+  <a class="card" href="italy2025/index.html">
+    <div class="imgwrap">
+      <img src="italy2025/photos/hero.jpg" alt="Bernini's colonnade at St Peter's Square" loading="lazy">
+      <span class="date">Oct – Nov 2025</span>
+    </div>
+    <div class="body">
+      <h2>Italy 2025 — A Jubilee Pilgrimage</h2>
+      <p>A Holy Year on foot and by train: a 13th-century castle in Umbria, the Via di Francesco, and a volunteer's green vest at the Holy Door.</p>
+      <span class="meta">3 cities · 1 Holy Door</span>
+    </div>
+  </a>
+
+  <a class="card" href="colorado2025/index.html">
+    <div class="imgwrap">
+      <img src="colorado2025/photos/hero.jpg" alt="The Front Range seen from Garden of the Gods" loading="lazy">
+      <span class="date">Apr 2025</span>
+    </div>
+    <div class="body">
+      <h2>Colorado 2025 — Front Range Homecoming</h2>
+      <p>Twenty years of home in the rearview: Colorado College, the Cripple Creek gold district, Pikes Peak in snow, and the last corn snow of the season.</p>
+      <span class="meta">2 ski areas · 79 photos</span>
+    </div>
+  </a>
+
+  <a class="card" href="italy2024/index.html">
+    <div class="imgwrap">
+      <img src="italy2024/photos/hero.jpg" alt="Basilica of Saint Francis above the valley" loading="lazy">
+      <span class="date">Oct – Nov 2024</span>
+    </div>
+    <div class="body">
+      <h2>Italy 2024 — Return to Umbria</h2>
+      <p>A five-star fortress in Perugia, Assisi after the buses leave, cats running a church, and a train strike finale across Rome.</p>
+      <span class="meta">2 hill towns · 7 video clips</span>
+    </div>
+  </a>
+
+  <a class="card" href="italy2022/index.html">
+    <div class="imgwrap">
+      <img src="italy2022/photos/20221123_040301572_ios-1.jpg" alt="Assisi, Italy" loading="lazy">
+      <span class="date">Nov 2022</span>
+    </div>
+    <div class="body">
+      <h2>Assisi 2022 — In the Footsteps of Saint Francis</h2>
+      <p>The first pilgrimage: the Porziuncola, the Basilica of Saint Francis, morning mists over the valley, and San Damiano.</p>
+      <span class="meta">140+ photos · 37 videos</span>
+    </div>
+  </a>
+
+  <a class="card" href="antarctica/index.html">
+    <div class="imgwrap">
+      <img src="antarctica/photos/hero.jpg" alt="Vernadsky Station seen from the water" loading="lazy">
+      <span class="date">Apr 1998</span>
+    </div>
+    <div class="body">
+      <h2>Antarctica 1998 — Vernadsky Station</h2>
+      <p>Zodiacs off the <em>Laurence M. Gould</em> through the sea ice to the Ukrainian base on Galindez Island: a desalination plant, a bar the British left behind, and excellent vodka.</p>
+      <span class="meta">7 photographs · 1 film</span>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  Journals, photographs &amp; questionable Italian · <b>Michael Hancock</b>
+</footer>
+
+</body>
+</html>

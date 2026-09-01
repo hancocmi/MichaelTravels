@@ -1,0 +1,17 @@
+# Windows / OneDrive clutter
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+
+# Editor / temp
+*.bak
+*.tmp
+*~
+
+# Netlify CLI state (if you ever install it)
+.netlify/

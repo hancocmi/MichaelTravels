@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colorado 2025 — Front Range Homecoming</title>
+<meta name="description" content="April 2025 on the Colorado Front Range: Castle Rock, Colorado College, the Cripple Creek gold district, Pikes Peak, Ute Pass, Garden of the Gods, and spring corn snow at Loveland and A-Basin.">
+<style>
+  :root{
+    --bg:#15100c; --card:#211811; --ink:#f2e8d9; --sub:#b79c7b;
+    --accent:#c9662f; --accent2:#e3ab4d; --line:#3a2a1d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden;
+        background:linear-gradient(160deg,#43220f 0%,#7a3a17 35%,#c9662f 62%,#2a1a10 100%)}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(1.08)}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em}
+  .hero p{color:#eddcc6;font-size:19px;margin-top:14px;max-width:560px}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#eddcc6;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 38px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent2);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#5a4432;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent2)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--line)}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"";position:absolute;left:0;top:10px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--accent)}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px}
+  .day p{color:#ded0bd;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent2);border:1px solid #503a26;border-radius:999px;padding:4px 12px}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:var(--accent);border-color:var(--accent);background:#2c1d12}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .25s,box-shadow .25s;display:block;background:#2a1d13}
+  .grid img:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.55)}
+  .slot{height:170px;border-radius:8px;border:1px dashed #5a4230;background:repeating-linear-gradient(45deg,#221810,#221810 10px,#281d13 10px,#281d13 20px);
+        display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;
+        font-family:Verdana,sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#7d6349}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(12,8,5,.95);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line)}
+  footer b{color:var(--accent2)}
+  footer a{color:var(--sub);text-decoration:none}
+  footer a:hover{color:var(--accent2)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <img src="photos/hero.jpg" alt="The Front Range seen from Garden of the Gods" onerror="this.style.display='none'">
+  <div class="inner">
+    <div class="kicker">April 2025 · Front Range, Colorado</div>
+    <h1>Colorado 2025</h1>
+    <p>Twenty years of home in the rearview, a fifteen-dollar Jeep, and the last good corn snow of the season above eleven thousand feet.</p>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</header>
+
+<div class="stats">
+  <div class="stat"><b>20+</b><span>Years called home</span></div>
+  <div class="stat"><b>2</b><span>Kids raised here</span></div>
+  <div class="stat"><b>14,115′</b><span>Pikes Peak</span></div>
+  <div class="stat"><b>9,494′</b><span>Cripple Creek</span></div>
+  <div class="stat"><b>$15</b><span>Jeep, per day</span></div>
+  <div class="stat"><b>79</b><span>Photos &amp; clips</span></div>
+</div>
+
+<nav class="dots" aria-label="Section navigation">
+  <a href="#s1" title="Getting There"></a>
+  <a href="#s2" title="Castle Rock"></a>
+  <a href="#s3" title="Colorado Springs"></a>
+  <a href="#s4" title="Up the Gold Camp Road"></a>
+  <a href="#s5" title="Cripple Creek"></a>
+  <a href="#s6" title="Pikes Peak"></a>
+  <a href="#s7" title="Ute Pass"></a>
+  <a href="#s8" title="Garden of the Gods"></a>
+  <a href="#s9" title="Loveland &amp; A-Basin"></a>
+</nav>
+
+<main class="timeline">
+
+  <section class="day" id="s1">
+    <div class="daylabel">Arrival · RDU → DEN</div>
+    <h2>Fifteen Dollars a Day and a Full Tank</h2>
+    <p>It was time to visit Colorado again and get in some spring skiing. A quick three-hour flight out of RDU and I was back in the place we called home for over twenty years — where we raised two wonderful kids in Castle Rock and watched them grow into beautiful, loving, talented adults. I am so proud of them.</p>
+    <p>Then the business of catching a rental. I went with a no-name outfit that didn't even have a shuttle stop yet, and it turned out better than any of the big ones: a new Jeep Sahara for fifteen bucks a day. Ready for the mountains, and for any deer standing in the way of them.</p>
+    <p>I headed straight for Castle Rock — Denver could wait. I remembered the roads and I remembered the drivers, but I do not remember people being this stupid. Oh well. I signed up for the toll surcharge and drove down the middle like everybody else.</p>
+    <div class="tags">
+      <span class="tag">RDU → DEN</span>
+      <span class="tag">Jeep Sahara · $15/day</span>
+      <a class="tag" href="https://www.expresstoll.com/" target="_blank" rel="noopener">E-470 ExpressToll</a>
+      <a class="tag" href="https://www.flydenver.com/" target="_blank" rel="noopener">Denver International</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/arrival_1.jpg" alt="The rental Jeep Sahara on a snowy mountain road" data-cap="The fifteen-dollar Sahara, earning it">
+    </div>
+  </section>
+
+  <section class="day" id="s2">
+    <div class="daylabel">Castle Rock</div>
+    <h2>The Old Neighborhood, at New Prices</h2>
+    <p>Checked out the old neighborhood and found a nice new steakhouse right next to the hotel. The town has grown — a lot — and everything is so much more expensive than the version of Castle Rock I carry around in my head.</p>
+    <p>I had the chance to attend Mass at Saint Francis of Assisi, the church whose renovation I helped pay toward back when this was home. It is a beautiful church, sitting up on the side of the rock itself, and it was good to see where the money went.</p>
+    <div class="tags">
+      <a class="tag" href="https://www.crgov.com/" target="_blank" rel="noopener">Castle Rock, Colorado</a>
+      <a class="tag" href="https://www.stfranciscr.org/" target="_blank" rel="noopener">St. Francis of Assisi Parish</a>
+      <a class="tag" href="https://en.wikipedia.org/wiki/Castle_Rock_(Colorado)" target="_blank" rel="noopener">The rock it's named for</a>
+    </div>
+  </section>
+
+  <section class="day" id="s3">
+    <div class="daylabel">Colorado Springs · Morning</div>
+    <h2>Every Place I Ever Worked, Mostly Gone</h2>
+    <p>This is where I first went to school — Colorado College, the Harvard of the West, second most expensive private school in the state, and one my parents decided I should end up paying for myself. I had a memorable time walking the campus, stopping by the library and standing outside my old dorm room.</p>
+    <p>Some of it is exactly where I left it and some of it has been replaced by buildings with a great deal more glass. Both facts land about the same way.</p>
+    <p>I spent the rest of the morning looking up all the places I worked as a kid: the pool halls, the restaurants, the remains of the IBM and DEC computer operations that used to anchor this town. Most everything is gone now, which is its own kind of information. Then the other Colorado Springs — the one built into the granite. Cheyenne Mountain and the home of NORAD, Space Command — still headquartered here that spring, before the move to Huntsville was announced — sitting on ground where I bought my first house, and the Air Force Academy up at the north end.</p>
+    <div class="tags">
+      <a class="tag" href="https://www.coloradocollege.edu/" target="_blank" rel="noopener">Colorado College</a>
+      <a class="tag" href="https://www.norad.mil/" target="_blank" rel="noopener">NORAD · Cheyenne Mountain</a>
+      <a class="tag" href="https://www.spacecom.mil/" target="_blank" rel="noopener">U.S. Space Command</a>
+      <a class="tag" href="https://www.usafa.edu/" target="_blank" rel="noopener">Air Force Academy</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/cosprings_1.jpg" alt="Colorado College sign" data-cap="Colorado College">
+      <img loading="lazy" src="photos/cosprings_2.jpg" alt="Old stone building on the Colorado College campus" data-cap="The old stone campus">
+      <img loading="lazy" src="photos/cosprings_3.jpg" alt="Modern academic building" data-cap="Newer than I remember">
+      <img loading="lazy" src="photos/cosprings_4.jpg" alt="Campus chapel" data-cap="The chapel on the quad">
+      <img loading="lazy" src="photos/cosprings_5.jpg" alt="Tutt Library" data-cap="Tutt Library">
+      <img loading="lazy" src="photos/cosprings_6.jpg" alt="Residence hall" data-cap="The old dorm">
+      <img loading="lazy" src="photos/cosprings_7.jpg" alt="Arched stone entryway" data-cap="Arched entry">
+      <img loading="lazy" src="photos/cosprings_8.jpg" alt="Campus lawn in early April" data-cap="Campus, early April">
+    </div>
+  </section>
+
+  <section class="day" id="s4">
+    <div class="daylabel">Into the High Country</div>
+    <h2>Two Tracks and a Lot of Snow</h2>
+    <p>Out of the Springs and up into the hills behind them. April on the Front Range means the plains are brown, the town is in shirtsleeves, and about twenty minutes of climbing puts you back into full winter — packed snow, one plowed lane, and pine shadow across all of it.</p>
+    <p>This is the stretch that justified the Jeep. Fifteen dollars a day and it earned every one of them.</p>
+    <div class="tags">
+      <span class="tag">Jeep Sahara, vindicated</span>
+      <a class="tag" href="https://en.wikipedia.org/wiki/Pike_National_Forest" target="_blank" rel="noopener">Pike National Forest</a>
+      <a class="tag" href="https://www.uncovercolorado.com/activities/gold-camp-road-tunnels/" target="_blank" rel="noopener">The old gold camp roads</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/goldcamp_1.jpg" alt="Snow-packed forest road" data-cap="One plowed lane">
+      <img loading="lazy" src="photos/goldcamp_2.jpg" alt="Tire tracks through snow between pines" data-cap="Two tracks and a prayer">
+      <img loading="lazy" src="photos/goldcamp_3.jpg" alt="Snow and pines beside the road" data-cap="Still winter in the trees">
+      <img loading="lazy" src="photos/goldcamp_4.jpg" alt="High country opening up beyond the trees" data-cap="The high country opens up">
+    </div>
+  </section>
+
+  <section class="day" id="s5">
+    <div class="daylabel">Teller County · Midday</div>
+    <h2>Cripple Creek — Gold, Then Blackjack</h2>
+    <p>Over the back of the mountain and down into Cripple Creek, sitting at about 9,494 feet on the southwest flank of Pikes Peak. This was one of the last great gold camps in the American West: the 1890 strike turned a cow pasture into a district that produced more than twenty million ounces of gold and, at its peak, held some fifty thousand people, with its own opera house and its own stock exchange.</p>
+    <p>You see the scale of it before you see the town. The hills on the way in are cut into benches — a working open-pit operation stepped down the mountainside, with the old headframes and the tailings of the original underground workings scattered around it. Poverty Gulch, where the first strike was made, has an interpretive sign now. The gulch itself looks like nothing at all, which is generally how these stories start.</p>
+    <p>The bust was as thorough as the boom. What kept Cripple Creek standing was a 1991 vote legalizing limited-stakes gambling, so the Victorian brick storefronts on Bennett Avenue now house slot machines instead of assay offices — same buildings, same awnings, entirely different business. Off the main street the old portals are still there in the hillside, timbered and gated and going nowhere.</p>
+    <div class="tags">
+      <a class="tag" href="https://visitcripplecreek.com/" target="_blank" rel="noopener">Visit Cripple Creek</a>
+      <a class="tag" href="https://en.wikipedia.org/wiki/Cripple_Creek,_Colorado" target="_blank" rel="noopener">The 1890 strike</a>
+      <a class="tag" href="https://www.cripplecreekrailroad.com/" target="_blank" rel="noopener">Cripple Creek &amp; Victor Narrow Gauge</a>
+      <a class="tag" href="https://en.wikipedia.org/wiki/Cripple_Creek_%26_Victor_Gold_Mine" target="_blank" rel="noopener">The open pit today</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/cripplecreek_1.jpg" alt="Terraced open pit mine in snow" data-cap="Benches cut down the mountainside">
+      <img loading="lazy" src="photos/cripplecreek_2.jpg" alt="Close view of mine terraces" data-cap="Twenty million ounces, roughly">
+      <img loading="lazy" src="photos/cripplecreek_3.jpg" alt="Poverty Gulch interpretive sign" data-cap="Poverty Gulch — where it started">
+      <img loading="lazy" src="photos/cripplecreek_4.jpg" alt="Victorian storefronts on Bennett Avenue" data-cap="Bennett Avenue">
+      <img loading="lazy" src="photos/cripplecreek_5.jpg" alt="Brick buildings with blue awnings" data-cap="Brick, blue awnings, slot machines">
+      <img loading="lazy" src="photos/cripplecreek_6.jpg" alt="Looking down the main street" data-cap="Down the main street">
+      <img loading="lazy" src="photos/cripplecreek_7.jpg" alt="Old mine portal cut into the hillside" data-cap="A hole in the mountain">
+      <img loading="lazy" src="photos/cripplecreek_8.jpg" alt="Timbered mine portal with gate" data-cap="Timbered, gated, going nowhere">
+    </div>
+  </section>
+
+  <section class="day" id="s6">
+    <div class="daylabel">Pikes Peak · Afternoon</div>
+    <h2>America's Mountain</h2>
+    <p>Pikes Peak tops out at 14,115 feet and it is the rare fourteener you can reach without earning it on foot — nineteen miles of switchbacks on the Pikes Peak Highway, or the cog railway out of Manitou Springs, which climbs on a rack rail and reopened in 2021 after a full rebuild.</p>
+    <p>In April the mountain is still deep in winter whatever the calendar says down in the Springs. The reservoirs partway up were half ice and half meltwater, the road was clear and the shoulders were not, and the summit dome above the treeline was as white as it gets.</p>
+    <p>This is the view that produced <em>America the Beautiful</em> — Katharine Lee Bates wrote the poem after coming up here in 1893. On a clear day the plains run flat and brown to the east until they simply stop being visible.</p>
+    <div class="tags">
+      <a class="tag" href="https://en.wikipedia.org/wiki/Pikes_Peak" target="_blank" rel="noopener">14,115 feet</a>
+      <a class="tag" href="https://coloradosprings.gov/pikes-peak-americas-mountain" target="_blank" rel="noopener">Pikes Peak Highway</a>
+      <a class="tag" href="https://www.cograilway.com/" target="_blank" rel="noopener">Cog Railway</a>
+      <a class="tag" href="https://en.wikipedia.org/wiki/America_the_Beautiful" target="_blank" rel="noopener">America the Beautiful</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/pikespeak_1.jpg" alt="Pikes Peak seen from town" data-cap="The peak, from down in town">
+      <img loading="lazy" src="photos/pikespeak_2.jpg" alt="The Jeep parked at a highway pullout" data-cap="Parked at the pullout">
+      <img loading="lazy" src="photos/pikespeak_3.jpg" alt="Snowy ridgeline" data-cap="Above the treeline">
+      <img loading="lazy" src="photos/pikespeak_4.jpg" alt="Snow-covered dome of the mountain" data-cap="Still white in April">
+      <img loading="lazy" src="photos/pikespeak_5.jpg" alt="Half-frozen reservoir below the peak" data-cap="Half ice, half meltwater">
+      <img loading="lazy" src="photos/pikespeak_6.jpg" alt="Reservoir and granite boulders" data-cap="Granite and ice">
+      <img loading="lazy" src="photos/pikespeak_7.jpg" alt="The highway running along the water" data-cap="The road along the water">
+      <img loading="lazy" src="photos/pikespeak_8.jpg" alt="Snow-covered summit rocks" data-cap="Summit rock">
+    </div>
+  </section>
+
+  <section class="day" id="s7">
+    <div class="daylabel">Ute Pass · Late Afternoon</div>
+    <h2>Passage from Prairie to High Plains</h2>
+    <p>Back down the west side and onto Ute Pass, the canyon route that US 24 follows out of the mountains and into Colorado Springs. The overlook sign puts it plainly — this is the passage from prairie to high plains, and it was a Ute travel route — and a buffalo trail before that — for a very long time before it was a highway. The Ute name for it translates roughly as the doorway to the red earth mountains, which is a better piece of writing than anything on the sign.</p>
+    <p>The pass drops into Manitou Springs, a town that exists because of what comes out of the ground here: naturally carbonated mineral springs the Ute held sacred long before the Victorians decided the water could cure them and built a resort around it. There are public fountains through town, you are meant to drink from them, and a couple of them taste actively terrible. The base of the Manitou Incline is here too — 2,744 railroad ties climbing roughly 2,000 vertical feet in under a mile. I looked at it.</p>
+    <div class="tags">
+      <a class="tag" href="https://en.wikipedia.org/wiki/Ute_Pass" target="_blank" rel="noopener">Ute Pass</a>
+      <a class="tag" href="https://manitousprings.org/" target="_blank" rel="noopener">Manitou Springs</a>
+      <a class="tag" href="https://manitousprings.org/mineral-spring-water/" target="_blank" rel="noopener">The mineral springs</a>
+      <a class="tag" href="https://coloradosprings.gov/parks/page/manitou-incline" target="_blank" rel="noopener">Manitou Incline · 2,744 steps</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/utepass_1.jpg" alt="Ute Pass Overlook interpretive sign" data-cap="Prairie to high plains">
+      <img loading="lazy" src="photos/utepass_2.jpg" alt="View down Ute Pass toward Colorado Springs" data-cap="Down the pass toward the Springs">
+      <img loading="lazy" src="photos/utepass_3.jpg" alt="Viewing scope at the overlook" data-cap="The overlook scope">
+      <img loading="lazy" src="photos/utepass_4.jpg" alt="Highway curving through the canyon" data-cap="US 24, eastbound">
+      <img loading="lazy" src="photos/utepass_5.jpg" alt="Snow lingering on the north-facing slopes" data-cap="Snow on the north faces">
+      <img loading="lazy" src="photos/utepass_6.jpg" alt="Michael at the Ute Pass overlook" data-cap="Still standing">
+    </div>
+  </section>
+
+  <section class="day" id="s8">
+    <div class="daylabel">Garden of the Gods · Golden Hour</div>
+    <h2>Sandstone, Stood on End</h2>
+    <p>Last stop of a long day, and the one that photographs itself. Garden of the Gods is a set of red sandstone fins tipped almost vertical by the same mountain-building that raised the range behind them — beds that were laid down flat and then stood on end. Charles Elliott Perkins bought the land, never developed it, and his children gave it to the City of Colorado Springs in 1909 on the condition that it stay free to the public forever. It has.</p>
+    <p>Late afternoon is the right time. The rock goes from orange to something closer to blood, the Front Range stacks up blue behind it, and Pikes Peak sits over the whole arrangement with snow still on top.</p>
+    <div class="tags">
+      <a class="tag" href="https://gardenofgods.com/" target="_blank" rel="noopener">Garden of the Gods</a>
+      <a class="tag" href="https://en.wikipedia.org/wiki/Garden_of_the_Gods" target="_blank" rel="noopener">Free to the public, forever</a>
+      <a class="tag" href="https://coloradosprings.gov/gog" target="_blank" rel="noopener">City of Colorado Springs · GoG</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/gardenofgods_1.jpg" alt="Red sandstone spires" data-cap="Red fins against blue">
+      <img loading="lazy" src="photos/gardenofgods_2.jpg" alt="Sandstone formation against the sky" data-cap="Stood on end">
+      <img loading="lazy" src="photos/gardenofgods_3.jpg" alt="Large red rock formation" data-cap="The big formations">
+      <img loading="lazy" src="photos/gardenofgods_4.jpg" alt="Trail with split-rail fence" data-cap="Trail through the garden">
+      <img loading="lazy" src="photos/gardenofgods_5.jpg" alt="Rock formations and scrub" data-cap="Rock and scrub">
+      <img loading="lazy" src="photos/gardenofgods_6.jpg" alt="Garden of the Gods trail map sign" data-cap="Trail map">
+      <img loading="lazy" src="photos/gardenofgods_7.jpg" alt="Michael at Garden of the Gods" data-cap="Proof of attendance">
+      <img loading="lazy" src="photos/gardenofgods_8.jpg" alt="The Front Range seen from the park" data-cap="The Front Range from the garden">
+    </div>
+  </section>
+
+  <section class="day" id="s9">
+    <div class="daylabel">Summit County</div>
+    <h2>The Best Parking of My Life</h2>
+    <p>Back to Denver and time to hit the slopes. A-Basin and Loveland are the diehards — the two that keep spinning lifts long after the rest of the state has given up and moved on to mud season. There was plenty of snow up high and it was really slushy further down, which is exactly the deal you make with April.</p>
+    <p>And for the first time in my life I parked this close to the lifts. No shuttle, no hike from an overflow lot, no six a.m. alarm to beat somebody to a spot — just pull in, boot up on the tailgate, and walk twenty steps to the chair. I feel like royalty now.</p>
+    <p>A few quick runs and I was ready for the hot tubs. I wanted to head into Breckenridge but stayed in Keystone instead — which, it turns out, was the right call.</p>
+    <div class="tags">
+      <a class="tag" href="https://www.arapahoebasin.com/" target="_blank" rel="noopener">Arapahoe Basin</a>
+      <a class="tag" href="https://skiloveland.com/" target="_blank" rel="noopener">Loveland Ski Area</a>
+      <a class="tag" href="https://en.wikipedia.org/wiki/Loveland_Pass" target="_blank" rel="noopener">Loveland Pass</a>
+      <a class="tag" href="https://www.keystoneresort.com/" target="_blank" rel="noopener">Keystone</a>
+    </div>
+    <div class="grid">
+      <img loading="lazy" src="photos/ski_1.jpg" alt="Ski area parking lot and base area" data-cap="First lot of the day">
+      <img loading="lazy" src="photos/ski_2.jpg" alt="Cars parked at the base" data-cap="Parked. No shuttle, no hike.">
+      <img loading="lazy" src="photos/ski_3.jpg" alt="Chairlift above a groomed run" data-cap="Lift spinning in April">
+      <img loading="lazy" src="photos/ski_4.jpg" alt="Ski run cut through the trees" data-cap="Corn snow through the trees">
+      <img loading="lazy" src="photos/ski_5.jpg" alt="Base area with the Continental Divide behind" data-cap="The Divide behind the base">
+      <img loading="lazy" src="photos/ski_6.jpg" alt="Parking lot at the base of the mountain" data-cap="The lot at the base">
+      <img loading="lazy" src="photos/ski_7.jpg" alt="Slopes rising directly above the parked cars" data-cap="Twenty steps to the chair">
+      <img loading="lazy" src="photos/ski_8.jpg" alt="Deep snow on the upper mountain" data-cap="Still deep up high">
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Built from the travel journal &amp; 79 photographs · <b>Front Range Colorado, April 2025</b><br><br>
+  <a href="../index.html">⌂ All trips</a> &nbsp;·&nbsp;
+  <a href="../nz2026/index.html">New Zealand 2026 →</a> &nbsp;·&nbsp;
+  <a href="../italy2025/index.html">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp;
+  <a href="../italy2024/index.html">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp;
+  <a href="../italy2022/index.html">Assisi 2022 — In the Footsteps of Saint Francis →</a> &nbsp;·&nbsp; <a href="../antarctica/index.html">Antarctica 1998 — Vernadsky Station →</a>
+</footer>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="close" aria-label="Close">×</button>
+  <button class="prev" aria-label="Previous">‹</button>
+  <img alt="">
+  <button class="next" aria-label="Next">›</button>
+  <div class="cap"></div>
+</div>
+
+<script>
+(function(){
+  /* Missing photos degrade to labeled placeholder tiles */
+  document.querySelectorAll('.grid img').forEach(function(img){
+    img.addEventListener('error', function(){
+      var d = document.createElement('div');
+      d.className = 'slot';
+      d.textContent = img.dataset.cap || 'photo';
+      img.replaceWith(d);
+    });
+  });
+
+  /* Scroll reveal */
+  var days = [].slice.call(document.querySelectorAll('section.day'));
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('show'); });
+  }, {threshold:.12});
+  days.forEach(function(d){ io.observe(d); });
+
+  /* Nav dots */
+  var dots = [].slice.call(document.querySelectorAll('nav.dots a'));
+  var spy = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      dots.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); });
+    });
+  }, {rootMargin:'-45% 0px -45% 0px'});
+  days.forEach(function(d){ spy.observe(d); });
+
+  /* Lightbox */
+  var lb = document.getElementById('lb'),
+      lbImg = lb.querySelector('img'),
+      lbCap = lb.querySelector('.cap'),
+      shots = [], idx = 0;
+
+  function collect(){ shots = [].slice.call(document.querySelectorAll('.grid img')); }
+  function show(i){
+    if(!shots.length) return;
+    idx = (i + shots.length) % shots.length;
+    lbImg.src = shots[idx].src;
+    lbCap.textContent = shots[idx].dataset.cap || '';
+  }
+  function open(i){ show(i); lb.classList.add('open'); }
+  function close(){ lb.classList.remove('open'); lbImg.src = ''; }
+
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if(t.matches('.grid img')){ collect(); open(shots.indexOf(t)); return; }
+    if(t.matches('#lb .next')){ show(idx + 1); return; }
+    if(t.matches('#lb .prev')){ show(idx - 1); return; }
+    if(t.matches('#lb .close') || t === lb){ close(); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key === 'Escape') close();
+    if(e.key === 'ArrowRight') show(idx + 1);
+    if(e.key === 'ArrowLeft') show(idx - 1);
+  });
+})();
+</script>
+</body>
+</html>
