@@ -64,3 +64,52 @@ instant and does not touch this repository.
 4. Add a card to `index.html` — cards run newest first, oldest last.
 5. Add a link to the new trip in the footer of every other trip page.
 6. Commit and push.
+
+## Working with Git day to day
+
+Four places, three verbs:
+
+```
+working folder --stage--> staging --commit--> local repo --push--> GitHub --> Netlify deploys
+      ^                                                                |
+      +-------------------------------- pull -------------------------+
+```
+
+A **commit** is a labelled snapshot that never leaves this PC. **Push** sends commits to GitHub.
+**Pull** brings GitHub's commits down here. Committing publishes nothing — push is what publishes.
+
+### In GitHub Desktop
+
+| What you want | Where |
+|---|---|
+| See what you changed | **Changes** tab; the checkboxes are the staging area |
+| Save a snapshot | Summary box → **Commit to main** (local only) |
+| Publish it | **Push origin**, top bar |
+| Check GitHub for changes | **Fetch origin** — becomes **Pull origin** if GitHub is ahead |
+| See past commits | **History** tab |
+
+The habit: fetch before starting, commit in small pieces with a real message, push when you stop.
+Messages are one line, plain — `Add Antarctica page`, `Fix footer links on Italy pages`.
+
+### Pull matters even working alone
+
+GitHub gets ahead whenever a file is edited in the browser on github.com, or another machine
+pushes, or an assistant commits on your behalf. Pull first and there is nothing to untangle.
+
+### Undoing things
+
+| Situation | Fix |
+|---|---|
+| Edited a file, not committed | Changes tab → right-click the file → **Discard changes** |
+| Bad commit, not pushed | History → right-click → **Revert** (makes an undo commit; nothing is lost) |
+| Bad commit, already pushed | Same **Revert**, then push |
+| Bad *deploy* | Netlify → Deploys → last good one → **Publish deploy**. Instant, doesn't touch Git |
+
+Conflicts only happen when the same lines change in two places. Editing only in this folder means
+you will most likely never see one.
+
+### Two things not to do
+
+- **Don't edit the old OneDrive copy** (`…\OneDrive\Pictures\Michael Hancock\michaeltravels site`).
+  It is a frozen backup as of 2026-09-01. Edits there will never reach the site.
+- **Never force-push.** Nothing about this site needs it.
