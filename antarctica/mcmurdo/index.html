@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>McMurdo Station — Living and Working on the Ice</title>
+<style>
+  :root{
+    --bg:#0b1216; --card:#132029; --ink:#e6eef2; --sub:#93aab6;
+    --accent:#7fd4e8; --accent2:#e0a15c; --line:#20323d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.68)}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,rgba(6,11,15,.92) 0%,rgba(6,11,15,.55) 34%,rgba(6,11,15,.12) 62%,rgba(6,11,15,0) 82%)}
+  .hero .inner{z-index:1}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em}
+  .hero p{color:#cfdde3;font-size:19px;margin-top:14px;max-width:560px}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#cfdde3;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 38px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#33505e;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent2)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--line)}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"";position:absolute;left:0;top:10px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--accent)}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px}
+  .day p{color:#c3d5dd;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent);border:1px solid #26505c;border-radius:999px;padding:4px 12px}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:var(--accent2);border-color:var(--accent2);background:#162b33}
+  a.tag.vid::after{content:" ▶";font-size:9px}
+  .aside{border-left:2px solid var(--line);padding-left:16px;margin:14px 0 20px;max-width:640px;
+         font-family:Verdana,sans-serif;font-size:12.5px;line-height:1.75;color:var(--sub)}
+  .aside b{color:var(--accent2);font-weight:normal}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .25s,box-shadow .25s;display:block;background:#16262f}
+  .grid img:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(6,10,13,.94);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em;text-align:center;padding:0 24px}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line)}
+  footer b{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <img src="photos/hero.jpg" alt="McMurdo Station on the volcanic slope above the frozen sound">
+  <div class="inner">
+    <div class="kicker">1990 – 1996 · Ross Island · 77°51′ South</div>
+    <h1>McMurdo Station</h1>
+    <p>Three winter-overs of thirteen months each, on a volcanic slope above a frozen sound — writing code for the National Science Foundation and finding out what a town does when nobody can leave it.</p>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>3</b><span>Winter-overs</span></div>
+  <div class="stat"><b>13</b><span>Months a tour</span></div>
+  <div class="stat"><b>4</b><span>Months of dark</span></div>
+  <div class="stat"><b>59</b><span>Photographs</span></div>
+  <div class="stat"><b>77°51′S</b><span>Latitude</span></div>
+</div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="timeline">
+
+<section class="day" id="d1">
+  <div class="daylabel">Getting There</div>
+  <h2>Eight Hours in a Cargo Bay</h2>
+  <p>You reach McMurdo from Christchurch, in the back of a ski-equipped Hercules, sitting sideways on red webbing among the freight. There are no windows to speak of. Everyone wears the issued parka and the issued boots and carries the issued bag, and for eight hours nothing happens at all.</p>
+  <p>Then the ramp comes down onto sea ice and you are standing on the frozen surface of McMurdo Sound, several miles from anything, waiting for a vehicle. The vehicle, more often than not, is a Delta — an articulated flatbed on tyres taller than a person, built for a surface that will not tolerate anything narrower. The road into town is marked with flags, because in a whiteout the flags are the only thing there is.</p>
+  <div class="tags"><a class="tag" href="https://www.usap.gov/" target="_blank" rel="noopener">United States Antarctic Program</a><a class="tag" href="https://en.wikipedia.org/wiki/McMurdo_Station" target="_blank" rel="noopener">McMurdo Station</a><span class="tag">LC-130 Hercules</span><span class="tag">Ross Ice Shelf</span></div>
+  <div class="grid" data-sec="arrive"></div>
+</section>
+
+<section class="day" id="d2">
+  <div class="daylabel">The Station</div>
+  <h2>A Mining Town That Does Science</h2>
+  <p>McMurdo is not a research station in the way people picture one. It is a small industrial town — fuel tanks, a power plant, a water plant, a garage, a galley, a store, a chapel, a fire department, and dormitories — that exists so that a much smaller number of people can do science somewhere else. In summer it runs to a thousand people. Over winter it drops to a couple of hundred, and the character of the place changes entirely.</p>
+  <p>Housing ranges from dormitory blocks to a row of arched huts. The best-known block is the one everybody called the <em>9-Pack</em> — and that is not slang; it is printed on the station plan. Rooms are small, shared, and warm. The galley runs on a posted schedule and everyone works to it.</p>
+  <p>Everything arrives by ship once a year. The vessel comes in behind an icebreaker that has cut a channel down the sound, ties up at an ice pier, and unloads a year of food, fuel, vehicles and freight in a few days. Everything that leaves goes out the same way. Waste is sorted into categories stencilled on the side of the containers — <em>burnable only</em> — decades before that was normal anywhere else.</p>
+  <div class="tags"><span class="tag">The 9-Pack</span><span class="tag">Building 155 · the galley</span><a class="tag" href="https://en.wikipedia.org/wiki/USCGC_Polar_Star_(WAGB-10)" target="_blank" rel="noopener">USCGC Polar Star</a><span class="tag">Vessel offload</span></div>
+  <div class="grid" data-sec="station"></div>
+  <div class="aside"><b>On the station plan.</b> A 1990 building register survives among these papers: every structure numbered and given a function. It is a plain document and a wonderful one — <i>1 Science Facility · 75 Gym · 155 Galley · 133 Communications and Computer Maintenance · 187 Aquarium · 191 Logistics, Cargo, Materials and Personnel</i> — and, listed separately at the bottom, two buildings on Black Island.</div>
+</section>
+
+<section class="day" id="d3">
+  <div class="daylabel">The Work</div>
+  <h2>Writing Code at the Bottom of the World</h2>
+  <p>The job was programmer and senior analyst for the National Science Foundation, supporting a wide range of science across the continent. In practice that meant a room of beige computers in the Crary Lab, and a system that tracked where every person and every pallet in the United States Antarctic Program actually was.</p>
+  <p>That sounds mundane until you consider the consequence of getting it wrong. A field camp expecting a fuel drum that went to the wrong coordinate is not an inventory discrepancy; it is a problem with a helicopter and a weather window attached to it. The second workplace — the IT building next to the heavy equipment shop — held the shelves of technical manuals, the spares, and the phone.</p>
+  <p>The other long thread was communications. McMurdo has a mountain in the way of the satellites it needs, so the link runs across the sound to <strong>Black Island</strong>, forty-odd miles off, where a small unmanned site full of antennas and radomes does the talking. Getting there meant a helicopter, and the route across the shelf had to be flagged by hand before anybody could drive it. Everything the station sent or received — the science data, the logistics traffic, and eventually the internet — went through that hill.</p>
+  <div class="tags"><a class="tag" href="https://www.usap.gov/videoclipsandmaps/mcmwebcam.cfm" target="_blank" rel="noopener">USAP webcams — live from McMurdo</a><span class="tag">Crary Science &amp; Engineering Center</span><span class="tag">Black Island Telecommunications Facility</span><span class="tag">NSF logistics tracking</span></div>
+  <div class="grid" data-sec="work"></div>
+  <div class="aside"><b>The webcams are still running.</b> They were set up for an Earth Day event — the organisers wanted a live camera on every continent, and Antarctica was the one nobody had. Those cameras, and their descendants, are still pointed at the same hills today, and anyone can look at them on the USAP site. Thirty years later I stood in front of a bank of the same feeds at the <a href="../../nz2026/index.html" style="color:var(--accent)">International Antarctic Centre in Christchurch</a>, which was a stranger feeling than I expected.</div>
+</section>
+
+<section class="day" id="d4">
+  <div class="daylabel">The Dark</div>
+  <h2>Four Months Without a Sunrise</h2>
+  <p>The sun sets in late April and does not come back until August. What people get wrong about the polar night is the idea that it is uniformly black. It is not. There is a long blue twilight at either end of it that goes on for weeks, and in the middle of it the moon does a full circuit without setting, and the snow takes the colour of whatever light there is.</p>
+  <p>A wintering station invents its own calendar, because otherwise there isn't one. Midwinter dinner in June is the fixed point everything else hangs off. There is a chili cookoff, judged with more solemnity than the entries deserve — team banners in these photographs advertise <em>Road Kill Chili</em>, <em>Haz Mat Chili</em> served off the tailgate of a truck, and the <em>Cool Chili Cantina</em>, promising the hottest chili at the coldest place on earth. There is a parade of vehicles carrying snow and ice sculptures through the dark, which is precisely as strange and as good as it sounds. There is a band, and the band plays.</p>
+  <p>On the Fourth of July a party walked up Castle Rock in the dark, on the flank of Erebus, and set off flares. The route out has emergency shelters spaced along it, small and red and unmistakable, because the weather here changes faster than a person can walk.</p>
+  <p>Then the light comes back. The first sunrise after four months is an event with an audience, particularly for anyone who has been working nights, and the sky puts on lenticular clouds over Erebus that look like nothing else on earth.</p>
+  <div class="tags"><a class="tag" href="https://archive.org/details/the-antarctic-sun" target="_blank" rel="noopener">The Antarctic Sun — archive</a><span class="tag">Midwinter dinner</span><span class="tag">Castle Rock</span><span class="tag">Mount Erebus</span></div>
+  <div class="grid" data-sec="winter"></div>
+  <div class="aside"><b>The station papers.</b> Winter-overs published their own newspapers, and they are exactly what you would hope: <i>Dark Star — "McMurdo's Own Rag"</i>, <i>The Quick Brown — "All the news that's left to print"</i>, and the more official <i>Antarctica Sun Times</i>, "Published for the Frozen Chosen." One 1992 issue carries a letter of thanks to everybody who went out onto the shelf to flag the route to Black Island. Another explains that the Navy Seabees are known as the Men in Green, after the greens they work in — which is the sort of detail you only get from a paper written by the people it is about.</div>
+</section>
+
+<section class="day" id="d5">
+  <div class="daylabel">Out of Town</div>
+  <h2>Huts, Ice, and a Frozen Seal</h2>
+  <p>Before anyone goes into the field they go to snow school. You learn to build a wall against the wind, then a shelter, then you sleep in the thing you built. It is a genuinely good course, and the part everybody remembers is not the theory but the moment the wall is high enough to stand behind and the wind stops.</p>
+  <p>Two miles from the station, on the point, is the hut Scott's <em>Discovery</em> expedition put up in 1902. It is still standing, still full of their supplies, still cold enough to have preserved them. Beside it is a wooden cross, and the inscription is legible today: <em>Sacred to the memory of George T. Vince, AB RN, of the Discovery, who was drowned near this spot, March 11 1902.</em> He slid off the edge in a blizzard. The cross has been there ever since, two miles from a town of a thousand people, which is a fair summary of what this place is.</p>
+  <p>Two miles the other way is <strong>Scott Base</strong>, the New Zealand station — green buildings, a signpost giving the distance to everywhere, and a bar. Relations between the two stations are warm and the traffic is mostly one-way, for a reason that will be obvious to anyone who has drunk both countries' beer.</p>
+  <p>Further out, the Dry Valleys: ice-free, wind-scoured, one of the driest places on the planet. Somewhere on the way there we came across a seal that had wandered inland, died, and been freeze-dried instead of decaying. They have been doing that for centuries here. Nothing rots; it just waits.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/Discovery_Hut" target="_blank" rel="noopener">Discovery Hut, Hut Point</a><a class="tag" href="https://en.wikipedia.org/wiki/Scott_Base" target="_blank" rel="noopener">Scott Base</a><span class="tag">McMurdo Dry Valleys</span><span class="tag">Snow survival school</span></div>
+  <div class="grid" data-sec="out"></div>
+</section>
+
+</div>
+
+<footer>Built from 59 photographs, a 1990 station plan and three winters of tape · <b>McMurdo Station, 1990–1996</b><br><br><a href="../../index.html" style="color:var(--accent);text-decoration:none">⌂ All trips</a> &nbsp;·&nbsp; <a href="../index.html" style="color:var(--accent);text-decoration:none">Antarctica 1998 — Vernadsky Station →</a> &nbsp;·&nbsp; <a href="../../nz2026/index.html" style="color:var(--accent);text-decoration:none">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../../italy2025/index.html" style="color:var(--accent);text-decoration:none">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../../colorado2025/index.html" style="color:var(--accent);text-decoration:none">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../../italy2024/index.html" style="color:var(--accent);text-decoration:none">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../../italy2022/index.html" style="color:var(--accent);text-decoration:none">Assisi 2022 — In the Footsteps of Saint Francis →</a></footer>
+
+<div id="lb">
+  <button class="close" onclick="closeLB()">×</button>
+  <button class="prev" onclick="step(-1)">‹</button>
+  <img id="lbimg" src="" alt="">
+  <div class="cap" id="lbcap"></div>
+  <button class="next" onclick="step(1)">›</button>
+</div>
+
+<script>
+const MANIFEST = {"arrive": ["arrive_1.jpg","arrive_2.jpg","arrive_3.jpg","arrive_4.jpg","arrive_5.jpg","arrive_6.jpg","arrive_7.jpg","arrive_8.jpg"], "station": ["station_1.jpg","station_2.jpg","station_3.jpg","station_4.jpg","station_5.jpg","station_6.jpg","station_7.jpg","station_8.jpg","station_9.jpg","station_10.jpg","station_11.jpg","station_12.jpg"], "work": ["work_1.jpg","work_2.jpg","work_3.jpg","work_4.jpg","work_5.jpg","work_6.jpg","work_7.jpg","work_8.jpg","work_9.jpg","work_10.jpg","work_11.jpg","work_12.jpg"], "winter": ["winter_1.jpg","winter_2.jpg","winter_3.jpg","winter_4.jpg","winter_5.jpg","winter_6.jpg","winter_7.jpg","winter_8.jpg","winter_9.jpg","winter_10.jpg","winter_11.jpg","winter_12.jpg","winter_13.jpg","winter_14.jpg","winter_15.jpg"], "out": ["out_1.jpg","out_2.jpg","out_3.jpg","out_4.jpg","out_5.jpg","out_6.jpg","out_7.jpg","out_8.jpg","out_9.jpg","out_10.jpg","out_11.jpg","out_12.jpg"]};
+const CAPTIONS = {
+  arrive_1:"Inside the Hercules — sideways on webbing, eight hours to the ice",
+  arrive_2:"The cargo bay, somewhere over the Southern Ocean",
+  arrive_3:"Parkas, goggles and freight — the whole flight looks like this",
+  arrive_4:"The ice runway on the frozen sound, aircraft strung out along it",
+  arrive_5:"A Delta — articulated flatbed, tyres taller than a person",
+  arrive_6:"An orange U.S. Navy pickup, station transport",
+  arrive_7:"Walking the flagged route out on the sea ice",
+  arrive_8:"A route flag on the ice. In a whiteout these are all there is",
+  station_1:"McMurdo from above — roads, tanks, dormitories, the sound beyond",
+  station_2:"The town on its volcanic slope",
+  station_3:"The arched huts along the road below Observation Hill",
+  station_4:"Jamesway shelters at the edge of the station",
+  station_5:"A room. Bunk, shelf, desk, and everything you own for thirteen months",
+  station_6:"Quarters — the other half of a shared room",
+  station_7:"The galley servery, with the dining schedule on the board",
+  station_8:"The heavy equipment yard",
+  station_9:"Cargo containers, stencilled BURNABLE ONLY. Waste was sorted here decades early",
+  station_10:"The annual container vessel at the ice pier — a year of everything, in a few days",
+  station_11:"The icebreaker in the channel she has just cut",
+  station_12:"A road race through the station, in shorts, because why not",
+  work_1:"The IT building — three machines and a wall of technical manuals",
+  work_2:"The office. The Full House poster came with the room",
+  work_3:"A working morning",
+  work_4:"The other side of the same office",
+  work_5:"On the phone to somewhere that is not here",
+  work_6:"The team, in issued red, in the lab",
+  work_7:"A briefing over coffee",
+  work_8:"Black Island — the dish on the hill, and a figure for scale",
+  work_9:"Antenna tower, radome and equipment shelter",
+  work_10:"The radomes at Black Island. Everything the station said went through here",
+  work_11:"A Navy Huey over the hill — the only practical way in",
+  work_12:"Standing on the flat white, forty miles from the station",
+  winter_1:"The station under a low sun, every stack steaming",
+  winter_2:"Twilight. This goes on for weeks at either end of the dark",
+  winter_3:"The last of the light over the hills",
+  winter_4:"Lenticular clouds — the sky here makes shapes it makes nowhere else",
+  winter_5:"Pink lenticulars at dusk",
+  winter_6:"Sunset over the ridge",
+  winter_7:"An ice sculpture built on the bed of a truck, for the parade through the dark",
+  winter_8:"The chili cookoff. The whole town turns out, and an ambulance attends",
+  winter_9:"The Cool Chili Cantina — the hottest chili at the coldest place on earth",
+  winter_10:"Road Kill Chili. The judging is taken very seriously",
+  winter_11:"Out in the dark — the Fourth of July trip up Castle Rock",
+  winter_12:"Flash-lit at night, a long way from the lights of town",
+  winter_13:"An emergency shelter on the Castle Rock route, below the peak",
+  winter_14:"Heavy equipment working under lights in the middle of the night",
+  winter_15:"The sun laid flat across the sea ice",
+  out_1:"Snow school — cutting and stacking blocks into a wall",
+  out_2:"The shelter going up, flag line behind",
+  out_3:"A snow pit. You learn what the layers mean before you trust the surface",
+  out_4:"Vince's Cross, Hut Point — March 11, 1902",
+  out_5:"Discovery Hut, put up by Scott's expedition in 1902 and still standing",
+  out_6:"The chain along the point, and the sound beyond",
+  out_7:"The Scott Base signpost — distances to everywhere",
+  out_8:"Scott Base. Green buildings, and the better beer",
+  out_9:"A freeze-dried seal, found inland on the way to the Dry Valleys",
+  out_10:"Nothing rots here. It just waits",
+  out_11:"Pressure ridges where the sea ice meets the shore",
+  out_12:"Erebus over the hood of a truck"
+};
+let all = [];
+document.querySelectorAll('.grid').forEach(g=>{
+  const sec = g.dataset.sec;
+  (MANIFEST[sec]||[]).forEach(name=>{
+    const img = document.createElement('img');
+    const key = name.replace(/\.[^.]+$/,'');
+    img.src = 'photos/'+name; img.loading='lazy'; img.alt = CAPTIONS[key]||CAPTIONS[name]||sec;
+    const idx = all.length; all.push({src:img.src, cap:CAPTIONS[key]||CAPTIONS[name]||sec});
+    img.onclick = ()=>openLB(idx);
+    g.appendChild(img);
+  });
+});
+let cur=0;
+const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
+function openLB(i){cur=i; render(); lb.classList.add('open')}
+function closeLB(){lb.classList.remove('open')}
+function step(d){cur=(cur+d+all.length)%all.length; render()}
+function render(){lbimg.src=all[cur].src; lbcap.textContent=all[cur].cap+'  ·  '+(cur+1)+' / '+all.length}
+lb.onclick=e=>{if(e.target===lb)closeLB()}
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
+});
+const days=[...document.querySelectorAll('section.day')];
+const dots=document.getElementById('dots');
+days.forEach(s=>{
+  const a=document.createElement('a'); a.href='#'+s.id; a.title=s.querySelector('h2').textContent;
+  dots.appendChild(a);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('show');
+    const i=days.indexOf(e.target);
+    dots.querySelectorAll('a').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+}),{threshold:.25});
+days.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

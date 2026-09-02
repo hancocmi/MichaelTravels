@@ -129,7 +129,7 @@
 
 </div>
 
-<footer>Built from seven photographs and one tape · <b>Vernadsky Station, April 1998</b><br><br><a href="../index.html" style="color:var(--accent);text-decoration:none">⌂ All trips</a> &nbsp;·&nbsp; <a href="../nz2026/index.html" style="color:var(--accent);text-decoration:none">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../italy2025/index.html" style="color:var(--accent);text-decoration:none">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../colorado2025/index.html" style="color:var(--accent);text-decoration:none">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../italy2024/index.html" style="color:var(--accent);text-decoration:none">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../italy2022/index.html" style="color:var(--accent);text-decoration:none">Assisi 2022 — In the Footsteps of Saint Francis →</a></footer>
+<footer>Built from seven photographs and one tape · <b>Vernadsky Station, April 1998</b><br><br><a href="../index.html" style="color:var(--accent);text-decoration:none">⌂ All trips</a> &nbsp;·&nbsp; <a href="../nz2026/index.html" style="color:var(--accent);text-decoration:none">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../italy2025/index.html" style="color:var(--accent);text-decoration:none">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../colorado2025/index.html" style="color:var(--accent);text-decoration:none">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../italy2024/index.html" style="color:var(--accent);text-decoration:none">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../italy2022/index.html" style="color:var(--accent);text-decoration:none">Assisi 2022 — In the Footsteps of Saint Francis →</a> &nbsp;·&nbsp; <a href="mcmurdo/index.html" style="color:var(--accent);text-decoration:none">McMurdo Station 1990–1996 →</a></footer>
 
 <div id="lb">
   <button class="close" onclick="closeLB()">×</button>
@@ -155,8 +155,9 @@ document.querySelectorAll('.grid').forEach(g=>{
   const sec = g.dataset.sec;
   (MANIFEST[sec]||[]).forEach(name=>{
     const img = document.createElement('img');
-    img.src = 'photos/'+name; img.loading='lazy'; img.alt = CAPTIONS[name]||sec;
-    const idx = all.length; all.push({src:img.src, cap:CAPTIONS[name]||sec});
+    const key = name.replace(/\.[^.]+$/,'');
+    img.src = 'photos/'+name; img.loading='lazy'; img.alt = CAPTIONS[key]||CAPTIONS[name]||sec;
+    const idx = all.length; all.push({src:img.src, cap:CAPTIONS[key]||CAPTIONS[name]||sec});
     img.onclick = ()=>openLB(idx);
     g.appendChild(img);
   });
