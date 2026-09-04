@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>South Pole Station — A Year at Ninety South</title>
+<style>
+  :root{
+    --bg:#0a0d16; --card:#121828; --ink:#e8ecf5; --sub:#98a4c4;
+    --accent:#9fc9ff; --accent2:#f2b866; --line:#222a45;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65}
+
+  /* Hero */
+  .hero{position:relative;height:92vh;min-height:520px;display:flex;align-items:flex-end;overflow:hidden}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.62)}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(to top,rgba(6,8,16,.94) 0%,rgba(6,8,16,.55) 34%,rgba(6,8,16,.12) 62%,rgba(6,8,16,0) 82%)}
+  .hero .inner{z-index:1}
+  .hero .inner{position:relative;padding:48px 8vw;max-width:1000px}
+  .kicker{font-family:Verdana,sans-serif;font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-size:clamp(38px,7vw,76px);font-weight:400;letter-spacing:.01em}
+  .hero p{color:#d3dbee;font-size:19px;margin-top:14px;max-width:560px}
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:#d3dbee;font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* Stats strip */
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:0;border-bottom:1px solid var(--line);background:var(--card)}
+  .stat{padding:26px 38px;text-align:center}
+  .stat b{display:block;font-size:30px;color:var(--accent);font-weight:400}
+  .stat span{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+
+  /* Nav dots */
+  nav.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+  nav.dots a{width:10px;height:10px;border-radius:50%;background:#34405f;transition:.2s;display:block}
+  nav.dots a.active{background:var(--accent);transform:scale(1.5)}
+  nav.dots a:hover{background:var(--accent2)}
+  @media(max-width:760px){nav.dots{display:none}}
+
+  /* Timeline */
+  .timeline{max-width:1060px;margin:0 auto;padding:70px 5vw;position:relative}
+  .timeline::before{content:"";position:absolute;left:calc(5vw + 7px);top:0;bottom:0;width:2px;background:var(--line)}
+  section.day{position:relative;padding:0 0 90px 56px;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+  section.day.show{opacity:1;transform:none}
+  section.day::before{content:"";position:absolute;left:0;top:10px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--accent)}
+  .daylabel{font-family:Verdana,sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:400;margin-bottom:14px}
+  .day p{color:#c6cfe6;max-width:640px;margin-bottom:12px;font-size:17px}
+  .tags{margin:4px 0 18px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:Verdana,sans-serif;font-size:11px;color:var(--accent);border:1px solid #2c4470;border-radius:999px;padding:4px 12px}
+  a.tag{text-decoration:none;transition:.2s}
+  a.tag::after{content:" ↗";opacity:.6;font-size:10px}
+  a.tag:hover{color:var(--accent2);border-color:var(--accent2);background:#172038}
+  a.tag.vid::after{content:" ▶";font-size:9px}
+  .aside{border-left:2px solid var(--line);padding-left:16px;margin:14px 0 20px;max-width:640px;
+         font-family:Verdana,sans-serif;font-size:12.5px;line-height:1.75;color:var(--sub)}
+  .aside b{color:var(--accent2);font-weight:normal}
+  .quote{max-width:640px;margin:0 0 22px;padding:18px 22px;border-left:3px solid var(--accent2);background:var(--card);border-radius:0 10px 10px 0;font-style:italic;color:#d3dbee;font-size:18px}
+
+  /* Photo grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:18px}
+  .grid img{width:100%;height:170px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .25s,box-shadow .25s;display:block;background:#161d33}
+  .grid img:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+
+  /* Lightbox */
+  #lb{position:fixed;inset:0;background:rgba(5,7,14,.94);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column}
+  #lb.open{display:flex}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  #lb .cap{color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;margin-top:12px;letter-spacing:.1em;text-align:center;padding:0 24px}
+  #lb button{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#fff;font-size:44px;cursor:pointer;padding:20px;opacity:.7}
+  #lb button:hover{opacity:1}
+  #lb .prev{left:8px} #lb .next{right:8px}
+  #lb .close{top:14px;right:18px;transform:none;font-size:30px;position:absolute}
+
+  footer{text-align:center;padding:48px 20px 70px;color:var(--sub);font-family:Verdana,sans-serif;font-size:12px;border-top:1px solid var(--line)}
+  footer b{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <img src="photos/hero.jpg" alt="The Geographic South Pole marker with the American flag">
+  <div class="inner">
+    <div class="kicker">1993 – 1994 · Amundsen-Scott Station · 90° South</div>
+    <h1>South Pole Station</h1>
+    <p>A year under the Dome with twenty-seven people, a mainframe the size of an office, and the job of bringing the internet to the one place on earth that could not see the satellites.</p>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><b>27</b><span>Winter-overs</span></div>
+  <div class="stat"><b>6</b><span>Months of dark</span></div>
+  <div class="stat"><b>−100°F</b><span>And colder</span></div>
+  <div class="stat"><b>9,300 ft</b><span>Elevation</span></div>
+  <div class="stat"><b>66</b><span>Photographs</span></div>
+</div>
+
+<nav class="dots" id="dots"></nav>
+
+<div class="timeline">
+
+<section class="day" id="d1">
+  <div class="daylabel">Getting In</div>
+  <h2>Bring Plenty of Blood</h2>
+  <div class="quote">They say you go down to Antarctica the first time for the adventure, the second time for the money, and the third time because you no longer function well in normal society.</div>
+  <p>This was the third of four winters, and the only one at the Pole. A good friend had been picked as station leader and asked me to join the twenty-seven people who would spend the winter. The job was to look after the computers for the science lab and to help put in the first internet connection to the South Pole.</p>
+  <p>You do not simply show up. The Navy physical is thorough — bring plenty of blood, and expect shots for diseases you have never heard of, and a first cardiac stress test. Then three days at a naval hospital for the psychological evaluation: the same questions, asked over and over. <em>Do you hear voices? What are they telling you?</em> They take it seriously. One of our group was sent back from the Pole by the Navy commander that year, and they will lock you in the infirmary if they have to.</p>
+  <p>Then snow school, and fire school. Fire school is the one people underestimate — crawling through simulated fire in a self-contained breathing set, dragging a body along with you, is not easy at sea level, and the Pole is not at sea level.</p>
+  <p>The way in is a ski-equipped LC-130 Hercules from McMurdo, three hours over the Transantarctic Mountains. On our flight in sat the film director John Carpenter, collecting material for another <em>Thing</em>. He had come to the right place.</p>
+  <div class="tags"><a class="tag" href="https://www.usap.gov/" target="_blank" rel="noopener">United States Antarctic Program</a><a class="tag" href="https://en.wikipedia.org/wiki/Amundsen%E2%80%93Scott_South_Pole_Station" target="_blank" rel="noopener">Amundsen–Scott South Pole Station</a><span class="tag">LC-130 Hercules</span><span class="tag">Twin Otter</span><a class="tag" href="../mcmurdo/index.html">McMurdo Station →</a></div>
+  <div class="grid" data-sec="arrive"></div>
+</section>
+
+<section class="day" id="d2">
+  <div class="daylabel">Ninety South</div>
+  <h2>Every Time Zone in a Single Step</h2>
+  <p>There are two poles. The ceremonial one is a barber's pole with a mirrored ball on top, ringed by the flags of the Antarctic Treaty nations, and it is where everyone has their photograph taken. The geographic one is a sign and a stake in the snow a little way off, and it moves — or rather the ice moves, about ten metres a year, so the marker is re-surveyed and re-planted every New Year's Day.</p>
+  <p>Beside it a signpost gives the distances to everywhere, all of them north. Every direction from here is north. Every line of longitude meets under your feet, which means you can walk through all twenty-four time zones in a few strides, and it means the station can keep whatever clock it likes. Most people ran on Zulu — Greenwich time. I chose the hours when the fewest people would be at work back home, because a computer that nobody is using is a computer you can fix.</p>
+  <p>The Pole sits on nearly three kilometres of ice, at an elevation of about 9,300 feet — and because the atmosphere is thinner at the poles it feels higher still. The horizon is flat in every direction. There is nothing to look at, and after a while that becomes the thing you look at.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/Ceremonial_South_Pole" target="_blank" rel="noopener">The ceremonial pole</a><span class="tag">Geographic South Pole</span><span class="tag">Zulu time</span><span class="tag">Sastrugi</span></div>
+  <div class="grid" data-sec="pole"></div>
+</section>
+
+<section class="day" id="d3">
+  <div class="daylabel">Under the Dome</div>
+  <h2>Living in a Freezer</h2>
+  <p>The station was the geodesic dome built in 1975 to replace the original 1957 base, which by then was buried under the ice. The new elevated station on stilts was only just being started. You entered through an arched tunnel that sloped down under the snow, and inside the Dome stood several buildings that looked like shipping containers stacked on one another — the galley, the computer building, the dorms, the gym. The Dome itself was unheated. It kept the wind off and the snow out; the buildings inside it were the only warm places. We were living in frozen-food lockers, heated from within.</p>
+  <p>Food came once a year. Pallets were forked off the aircraft and laid out in a grid behind the Dome, and because the snow buries them over time, their positions were recorded on what we called the pirate's map. Ten years' supply of frozen lobster and three-bean salad. Expiry dates from 1979. The burgers were fine.</p>
+  <p>The bar was Club 90 South. The station also had a Volunteer Fire Department, of which every one of us was a member, and the door said so.</p>
+  <p>One afternoon a few of us went down into <strong>Old Pole</strong>, the original station, abandoned under the ice. It was perfectly preserved: food and medicines still in their containers, a 1974 Montgomery Ward catalogue lying on the galley table, corridors of dark buildings under a roof of snow. It was as close to a science-fiction set as I have ever stood in, which may be why the man from the Hercules was interested.</p>
+  <div class="tags"><a class="tag" href="https://southpolestation.com/pole/oldpole.html" target="_blank" rel="noopener">Old Pole — southpolestation.com</a><span class="tag">The Dome, 1975 – 2010</span><span class="tag">Club 90 South</span><span class="tag">The pirate's map</span></div>
+  <div class="grid" data-sec="dome"></div>
+  <div class="aside"><b>From the wire, that year.</b> An Associated Press story ran under the headline <i>Buried under snowdrifts and time — Creaky South Pole station needs some rebuilding in post-Cold War era</i>: the Dome was sinking under drifts, the buildings inside had outlived their design, and the plan for a replacement on stilts was on the table. Another, <i>U.S. Ends Big Chill at South Pole</i>, reported the National Science Foundation's new willingness to give private adventurers a cup of coffee and a tour — after a Norwegian expedition lost a man in a crevasse in December 1993, a few weeks after we arrived, and the station had to mount the rescue.</div>
+</section>
+
+<section class="day" id="d4">
+  <div class="daylabel">The Work</div>
+  <h2>A Nine-Metre Dish and a Wobbly Satellite</h2>
+  <p>Because I had worked for Digital Equipment Corporation, I was given the station's main computer, a VAX-11/780. Even in 1994 that was a mammoth — it filled most of my office. The daily chores included the weather: every day the station's observations had to be teletyped to the right places, by a FORTRAN program that was ancient even then.</p>
+  <p>The thing that mattered, though, was the dish. Nobody today can imagine life without the internet, and here we were near the beginning of it, when it was still an NSF project to connect a handful of universities. The South Pole is the worst place on earth for satellites: the geostationary ones sit on the equator, and from ninety south they are below the horizon. What we had was a nine-metre dish that could barely see over the edge of the world, and a transponder on an old Navy satellite that wobbled horribly in its orbit — so the dish needed constant care and constant repointing. Before that, contact with home was VHF and ham radio, or INMARSAT at nineteen dollars a minute.</p>
+  <p>NASA had its own problem: satellites lost visibility as they crossed the poles, which annoyed the smart people, so they sent an engineer to install a tracking system. His previous claim to fame was cloud-seeding — making it rain at chosen times and places in south-east Asia. In return for our maintaining his equipment, we were allowed to use his satellite to call home. Free.</p>
+  <p>Once the link was up, a principal investigator from the University of Chicago arranged an interview with a Channel 5 news programme — the first live broadcast from the South Pole. I had my thirty seconds of television, and used them to introduce the station mascot, a stuffed wallaby.</p>
+  <div class="tags"><a class="tag" href="https://www.usap.gov/videoclipsandmaps/spwebcam.cfm" target="_blank" rel="noopener">USAP webcams — live from the Pole</a><span class="tag">VAX-11/780</span><span class="tag">FORTRAN weather teletype</span><span class="tag">Satellite tracking</span><span class="tag">First live broadcast</span></div>
+  <div class="grid" data-sec="work"></div>
+</section>
+
+<section class="day" id="d5">
+  <div class="daylabel">The Science</div>
+  <h2>Looking Back to the Beginning of Time</h2>
+  <p>The Pole is the darkest, driest, most stable sky on the planet, and the station science leader spent the year proving it — the paper on the South Pole's near-infrared sky brightness came out of that winter. It is why the telescopes are here. The infrared explorer in the dark sector looked back towards the beginning of time, and it was a strange thing to sit at a terminal and watch light arrive that had been travelling since before there was anything to travel through.</p>
+  <p>In July 1994, in the middle of the dark, that telescope was pointed at Jupiter. Comet Shoemaker-Levy 9 was breaking up and hitting the planet piece by piece, and the Pole was one of the few places on earth that could watch continuously. We stayed up for a couple of days taking pictures of the impacts on the surface of Jupiter, and it made the news.</p>
+  <p>The neutrino hunters were drilling. Neutrinos have almost no mass and are the only particle known to escape a black hole, so if you can tell where they came from you can find the black holes. The idea was to lower strings of photomultiplier tubes two kilometres into the ice and wait for one to hit. The holes were drilled with hot-water pressure sprayers — and the water in the tanks doubled as our scuba pool. The station electrician was a certified instructor, so we spent the winter getting ready for an open-water dive in Akaroa, New Zealand.</p>
+  <p>NOAA measured the ozone. Launching the balloons and following them electronically around the continent was one of the good jobs. The ozone hole was more than an abstraction down here; it is why you were issued sunglasses.</p>
+  <p>Visitors needed permission to land — the tower would wave a flight off without it. That year we had a couple of senators, and a Saudi prince with his daughters. Twenty-five thousand dollars for two hours, coffee and cookies.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/Comet_Shoemaker%E2%80%93Levy_9" target="_blank" rel="noopener">Comet Shoemaker–Levy 9</a><a class="tag" href="https://en.wikipedia.org/wiki/Antarctic_Muon_And_Neutrino_Detector_Array" target="_blank" rel="noopener">AMANDA — the neutrino array</a><a class="tag" href="https://gml.noaa.gov/dv/spo_oz/" target="_blank" rel="noopener">NOAA South Pole ozone</a><a class="tag" href="https://www.academia.edu/74687095/The_South_Pole_near_infrared_sky_brightness" target="_blank" rel="noopener">The South Pole near-infrared sky brightness</a><a class="tag" href="https://www.cfa.harvard.edu/facilities-technology/telescopes-instruments/south-pole-telescope-antarctica" target="_blank" rel="noopener">South Pole Telescope today</a></div>
+  <div class="grid" data-sec="science"></div>
+  <div class="aside"><b>Radio telescope: a cool view.</b> An AP story from the station that year explained the other new instrument, AST/RO, a sub-millimetre telescope looking at carbon atoms in neighbouring galaxies. "Cold enough for you?" is the sort of lame joke you'd expect at the Pole, the reporter wrote — but the receiver actually ran on liquid helium at four degrees above absolute zero, so the answer was no, not nearly cold enough.</div>
+</section>
+
+<section class="day" id="d6">
+  <div class="daylabel">The Dark</div>
+  <h2>Six Months Without a Sun</h2>
+  <p>The sun sets in March and does not rise until September. In between, the cold is a different kind of cold: severe frostbite in minutes even in full extreme-weather gear, and people getting lost in a storm walking between two buildings they had walked between a hundred times. When the wind was bad we strung ropes between the buildings so that nobody would be blown over or lose the way. And over all of it, the aurora — the southern lights over the Dome, which is the one thing in this set of photographs that the camera could not do justice to.</p>
+  <p>A wintering station invents its own occasions. The <strong>300 Club</strong>: wait for the temperature outside to reach a hundred below, sit in the sauna at two hundred above, then run naked out of the Dome and around the ceremonial pole and back, watching your breath turn to ice like a cartoon. The <strong>Race Around the World</strong>: three kilometres around the station and the Pole, through every time zone, in bunny boots.</p>
+  <p>Fire drills, scheduled and otherwise, because we were the fire department. Hauling the gear across the station in a breathing set at this altitude is its own kind of exercise.</p>
+  <p>Midwinter brought the <strong>airdrop</strong>. An Air Force transport out of Christchurch comes over in the dark and pushes out pallets of mail and fresh food. We sent the aircrew an AutoCAD drawing of where the buildings were so they would not drop the pallets on us. The parachutes are mostly for stabilisation; the pallets land like rock, and somebody had packed a truck transmission on top of our mail. My father sent Simon Schama's <em>Citizens</em>, nine hundred pages on the French Revolution, which is the right length for a winter. After months of frozen lobster the fresh fruit was a gift. There was a fly in the produce. We kept it alive for three days.</p>
+  <p>One Hercules crew made the mistake of shutting down their engines on the ground. The oil froze. They lived in our recreation room for two weeks while parts came. The lesson, passed down ever since: do not get off the plane, even if they offer you tea.</p>
+  <div class="tags"><a class="tag" href="https://en.wikipedia.org/wiki/300_Club" target="_blank" rel="noopener">The 300 Club</a><span class="tag">Race Around the World</span><span class="tag">Midwinter airdrop</span><a class="tag" href="https://www.antarctica.gov.au/news/explore-antarctica/auroras/" target="_blank" rel="noopener">Aurora australis</a></div>
+  <div class="grid" data-sec="dark"></div>
+</section>
+
+<section class="day" id="d7">
+  <div class="daylabel">Sunrise</div>
+  <h2>Warm Enough at Thirty Below</h2>
+  <p>Antarctica is a dangerous place and most years it takes someone. The rules were simple and we kept them: radio at all times, a buddy, check the weather, tell the office where you are going, carry the right gear. Crevasse fields are cracks that go very deep, bridged by a thin skin of snow you do not see until you are falling through it, which is why so much of a season goes into flagging safe routes for vehicles across the ice. The Norwegian film crew that lost a man and most of its vehicles that December is still down there; the body and the Hägglunds trucks were never recovered. In my first week at McMurdo, years earlier, a helicopter with a seasoned pilot and three New Zealand scientists had flown into the side of a mountain, and later that season two Navy men climbing Castle Rock for fun lost their anchor. The bodies wait in the galley freezer for the next plane. Pay attention in the safety briefings.</p>
+  <p>Then the sun comes back, and a few weeks later the thermometer reaches thirty below, and that is the spring party — because at thirty below the snowcats and the plows will start, and the runway can be groomed, and the newcomers can arrive, and we can go back to McMurdo. No more hauling equipment out to the telescopes through the dark sector on foot.</p>
+  <p>The first Hercules of the season is a strange thing to watch land. It brings people you have never met, who have not spent the winter, and who talk very fast.</p>
+  <div class="tags"><span class="tag">First sunrise</span><span class="tag">Spring party</span><span class="tag">Station opening</span><a class="tag" href="../index.html">Vernadsky Station, 1998 →</a></div>
+  <div class="grid" data-sec="sunrise"></div>
+  <div class="aside"><b>What came later.</b> The Pole has kept making the news since. In December 1997 three skydivers made an unauthorised jump over the station and died on impact — the plateau is nearly ten thousand feet up, the surface looks exactly like the sky, and their altimeters had not been reset. In 1999 the station doctor found a lump in her own breast in the middle of winter; a midwinter airdrop brought her equipment and a video link to her consultants, and she treated herself until a plane could get in. The Dome was dismantled in 2010 and the elevated station that was just being started in these photographs is the whole station now. And the webcams pointed at the pole today are the descendants of that first shaky satellite link. <a href="https://www.science.org/content/article/south-pole-air-drop-success" target="_blank" rel="noopener" style="color:var(--accent)">Science — the 1999 airdrop</a></div>
+</section>
+
+</div>
+
+<footer>Built from 66 photographs and a winter's notes · <b>Amundsen-Scott South Pole Station, 1993–1994</b><br><br><a href="../../index.html" style="color:var(--accent);text-decoration:none">⌂ All trips</a> &nbsp;·&nbsp; <a href="../mcmurdo/index.html" style="color:var(--accent);text-decoration:none">McMurdo Station 1990–1996 →</a> &nbsp;·&nbsp; <a href="../index.html" style="color:var(--accent);text-decoration:none">Antarctica 1998 — Vernadsky Station →</a> &nbsp;·&nbsp; <a href="../../nz2026/index.html" style="color:var(--accent);text-decoration:none">New Zealand 2026 →</a> &nbsp;·&nbsp; <a href="../../italy2025/index.html" style="color:var(--accent);text-decoration:none">Italy 2025 — A Jubilee Pilgrimage →</a> &nbsp;·&nbsp; <a href="../../colorado2025/index.html" style="color:var(--accent);text-decoration:none">Colorado 2025 — Front Range Homecoming →</a> &nbsp;·&nbsp; <a href="../../italy2024/index.html" style="color:var(--accent);text-decoration:none">Italy 2024 — Return to Umbria →</a> &nbsp;·&nbsp; <a href="../../italy2022/index.html" style="color:var(--accent);text-decoration:none">Assisi 2022 — In the Footsteps of Saint Francis →</a></footer>
+
+<div id="lb">
+  <button class="close" onclick="closeLB()">×</button>
+  <button class="prev" onclick="step(-1)">‹</button>
+  <img id="lbimg" src="" alt="">
+  <div class="cap" id="lbcap"></div>
+  <button class="next" onclick="step(1)">›</button>
+</div>
+
+<script>
+const MANIFEST = {
+  "arrive": ["arrive_1.jpg","arrive_2.jpg","arrive_3.jpg","arrive_4.jpg","arrive_5.jpg","arrive_6.jpg","arrive_7.jpg","arrive_8.jpg","arrive_9.jpg","arrive_10.jpg"],
+  "pole": ["pole_1.jpg","pole_2.jpg","pole_3.jpg","pole_4.jpg","pole_5.jpg","pole_6.jpg","pole_7.jpg","pole_8.jpg","pole_9.jpg","pole_10.jpg","pole_11.jpg","pole_12.jpg"],
+  "dome": ["dome_1.jpg","dome_2.jpg","dome_3.jpg","dome_4.jpg","dome_5.jpg","dome_6.jpg","dome_7.jpg","dome_8.jpg","dome_9.jpg","dome_10.jpg","dome_11.jpg","dome_12.jpg","dome_13.jpg"],
+  "work": ["work_1.jpg","work_2.jpg","work_3.jpg","work_4.jpg","work_5.jpg","work_6.jpg","work_7.jpg","work_8.jpg","work_9.jpg","work_10.jpg","work_11.jpg","work_12.jpg","work_13.jpg","work_14.jpg"],
+  "science": ["science_1.jpg","science_2.jpg","science_3.jpg","science_4.jpg","science_5.jpg","science_6.jpg","science_7.jpg"],
+  "dark": ["dark_1.jpg","dark_2.jpg","dark_3.jpg","dark_4.jpg","dark_5.jpg","dark_6.jpg","dark_7.jpg"],
+  "sunrise": ["sunrise_1.jpg","sunrise_2.jpg","sunrise_3.jpg"]
+};
+const CAPTIONS = {
+  arrive_1:"Inside the Hercules — red parkas, goggles, and three hours over the mountains",
+  arrive_2:"An LC-130 taxiing on the skiway",
+  arrive_3:"Take-off on skis, with the cargo module left on the snow",
+  arrive_4:"Meeting the aircraft. Everything and everyone arrives this way",
+  arrive_5:"Offload — a crane and a Spryte beside the Hercules",
+  arrive_6:"A planeload of new arrivals in issued red",
+  arrive_7:"The Twin Otter, the other aircraft that can land here",
+  arrive_8:"A snow berm on the skiway, the Hercules beyond, under a rare blue sky",
+  arrive_9:"A Hercules in blowing snow — the weather decides whether anyone comes or goes",
+  arrive_10:"Departure. The ski-drag of a Hercules leaving the Pole",
+  pole_1:"At the ceremonial pole, among the Treaty flags",
+  pole_2:"Ninety degrees south",
+  pole_3:"The same spot, another day. The flags never stop moving",
+  pole_4:"Walking out to the pole with a pack — a few hundred metres that feel like more",
+  pole_5:"The Geographic South Pole sign, re-surveyed and re-planted every year as the ice moves",
+  pole_6:"The flag and the sign under a low sun",
+  pole_7:"The signpost. Every distance is north, because every direction is north",
+  pole_8:"The flags of the Antarctic Treaty nations around the ceremonial pole",
+  pole_9:"The ceremonial pole with its mirrored ball",
+  pole_10:"Flags in silhouette against the sun",
+  pole_11:"Sastrugi — wind-carved snow — with a route flag, the only vertical thing for miles",
+  pole_12:"Hood up, indoors. It was that kind of building",
+  dome_1:"The Dome and its entrance arch, from the skiway",
+  dome_2:"The way in: an arched tunnel sloping down under the snow",
+  dome_3:"Inside the Dome — the red buildings that were the only warm places on station",
+  dome_4:"Cable reels, crates and an elevated building — the new station beginning beside the old",
+  dome_5:"A bulldozer clearing drift from the arch. Drift was the Dome's slow enemy",
+  dome_6:"The galley, red-checked tablecloths and all",
+  dome_7:"The lounge, on an ordinary evening",
+  dome_8:"South Pole Volunteer Fire Department. Every one of us was a member",
+  dome_9:"Club 90 South",
+  dome_10:"The bar, wood-panelled, with the chalkboard",
+  dome_11:"Boxes — the storeroom after a resupply",
+  dome_12:"Cargo pallets behind the Dome. Their positions went on the pirate's map",
+  dome_13:"The groomed road out to the skiway",
+  work_1:"In the lab with a camera, in the issued parka",
+  work_2:"The computer room — terminals, monitors and a shelf of manuals",
+  work_3:"Terminals and a parka on the chair",
+  work_4:"Equipment racks in the computer building",
+  work_5:"The communications racks, parkas hung on the door",
+  work_6:"Radio equipment and the station phones",
+  work_7:"The comms console",
+  work_8:"The comms office, with a clock for every time zone that mattered",
+  work_9:"At the terminals, with a window on the snow",
+  work_10:"A tracking display. This is what pointing a dish at a wobbling satellite looks like",
+  work_11:"The radome and the checkered skiway buildings",
+  work_12:"Under the structure — the author, mid-winter",
+  work_13:"The shop, with mission patches along the beam",
+  work_14:"The shop again — where most things on station were eventually fixed",
+  science_1:"An ozone balloon going up. NOAA launched them through the winter",
+  science_2:"The dark sector — the telescopes are kept away from the station's lights and heat",
+  science_3:"The road out to the science buildings",
+  science_4:"Instrument mount under the roof",
+  science_5:"A D8 hauling sledges — heavy equipment moved to the telescopes the hard way",
+  science_6:"Two figures walking out across the plateau",
+  science_7:"Looking out at the station from the tower",
+  dark_1:"The aurora over the Dome",
+  dark_2:"The Dome from a distance in the twilight",
+  dark_3:"The finish line of the Race Around the World",
+  dark_4:"Cutting snow blocks — the shelter you learn to build before you need one",
+  dark_5:"Gathering on the snow in the low light",
+  dark_6:"A refuelling party at the tractor",
+  dark_7:"A Hercules through the haze — the last one for a long while",
+  sunrise_1:"The sun back over the flags",
+  sunrise_2:"The first aircraft of the season, with its cargo module",
+  sunrise_3:"A Hercules on the skiway beside the fuel module — the way home"
+};
+let all = [];
+document.querySelectorAll('.grid').forEach(g=>{
+  const sec = g.dataset.sec;
+  (MANIFEST[sec]||[]).forEach(name=>{
+    const img = document.createElement('img');
+    const key = name.replace(/\.[^.]+$/,'');
+    img.src = 'photos/'+name; img.loading='lazy'; img.alt = CAPTIONS[key]||CAPTIONS[name]||sec;
+    const idx = all.length; all.push({src:img.src, cap:CAPTIONS[key]||CAPTIONS[name]||sec});
+    img.onclick = ()=>openLB(idx);
+    g.appendChild(img);
+  });
+});
+let cur=0;
+const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
+function openLB(i){cur=i; render(); lb.classList.add('open')}
+function closeLB(){lb.classList.remove('open')}
+function step(d){cur=(cur+d+all.length)%all.length; render()}
+function render(){lbimg.src=all[cur].src; lbcap.textContent=all[cur].cap+'  ·  '+(cur+1)+' / '+all.length}
+lb.onclick=e=>{if(e.target===lb)closeLB()}
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB(); if(e.key==='ArrowRight')step(1); if(e.key==='ArrowLeft')step(-1);
+});
+const days=[...document.querySelectorAll('section.day')];
+const dots=document.getElementById('dots');
+days.forEach(s=>{
+  const a=document.createElement('a'); a.href='#'+s.id; a.title=s.querySelector('h2').textContent;
+  dots.appendChild(a);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    e.target.classList.add('show');
+    const i=days.indexOf(e.target);
+    dots.querySelectorAll('a').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+}),{threshold:.25});
+days.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
